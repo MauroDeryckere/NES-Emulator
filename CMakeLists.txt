@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 3.27)
 # Any output by targets -> binary dir
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 
 # prevent installing to system directories. 
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE INTERNAL "")
@@ -50,6 +49,20 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 
 
 # @REGION PLATFORMS
+
+# Dealing with assets
+# We have some non-code resources that our application needs in order to work. How we deal with those differs per platform.
+if (APPLE)
+    # on Apple targets, the application bundle has a "resources" subfolder where we can place our assets.
+    # SDL_GetBasePath() gives us easy access to that location.
+    set(input_root "${CMAKE_CURRENT_LIST_DIR}/src")
+    macro(add_resource FILE)
+        file(RELATIVE_PATH relpath "${input_root}" "${FILE}")
+        get_filename_component(relpath "${relpath}" DIRECTORY)
+        target_sources(${EXECUTABLE_NAME} PRIVATE ${FILE})
+        set_property(SOURCE ${FILE} PROPERTY MACOSX_PACKAGE_LOCATION "Resources/${relpath}")
+    endmacro()
+endif()
 
 # set some extra configs for each platform
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES 
