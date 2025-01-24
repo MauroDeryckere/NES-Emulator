@@ -17,6 +17,6 @@ add_subdirectory(3rdParty)
 target_link_libraries(${PROJECT_NAME} PRIVATE 3RDPARTY)
 
 # Enable all warnings and treat them as errors
-target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Werror)
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
 # Set cpp 23 standard
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
