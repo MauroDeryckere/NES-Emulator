@@ -15,6 +15,8 @@ namespace NesEm
 		Renderer& operator=(Renderer&&) = default;
 
 		virtual void Render() const = 0;
+
+		virtual void ToggleFullScreen() noexcept = 0;
 	};
 
 	class NullRenderer final : public Renderer
@@ -29,6 +31,8 @@ namespace NesEm
 		NullRenderer& operator=(NullRenderer&&) = default;
 
 		void Render() const override {}
+
+		virtual void ToggleFullScreen() noexcept override {}
 	};
 } 
 

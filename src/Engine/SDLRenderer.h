@@ -24,8 +24,9 @@ namespace NesEm
 		SDLRenderer& operator=(SDLRenderer const&) = delete;
 		SDLRenderer& operator=(SDLRenderer&&) = delete;
 
-
 		void Render() const override;
+
+		virtual void ToggleFullScreen() noexcept override;
 
 	private:
 		SDLWindow m_Window;

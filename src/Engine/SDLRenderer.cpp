@@ -55,4 +55,20 @@ namespace NesEm
 
 		SDL_RenderPresent(m_pRenderer);
 	}
+
+	void SDLRenderer::ToggleFullScreen() noexcept
+	{
+		if (SDL_GetWindowFlags(m_Window.pWindow) & SDL_WINDOW_FULLSCREEN)
+		{
+			if(!SDL_SetWindowFullscreen(m_Window.pWindow, false))
+				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "%s", "Failed to disable fullscreen mode");
+		}
+		else
+		{
+			if (!SDL_SetWindowFullscreen(m_Window.pWindow, true))
+				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "%s", "Failed to enable fullscreen mode");
+		}
+		
+	}
+
 }

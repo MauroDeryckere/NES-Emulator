@@ -51,6 +51,12 @@ int main()
 			case SDL_EVENT_QUIT:
 				isRunning = false;
 				break;
+			case SDL_EVENT_KEY_DOWN:
+				if (event.key.scancode == SDL_SCANCODE_F10)
+				{
+					renderer.ToggleFullScreen();
+				}
+				break;
 			default: break;
 			}
 		}
