@@ -50,6 +50,12 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 
 # @REGION PLATFORMS
 
+if (APPLE)
+	find_library(IO_LIB ImageIO)
+ 	find_library(CS_LIB CoreServices)
+	target_link_libraries(${EXECUTABLE_NAME} PUBLIC ${IO_LIB} ${CS_LIB})
+endif()
+
 # Dealing with assets
 # We have some non-code resources that our application needs in order to work. How we deal with those differs per platform.
 if (APPLE)
@@ -96,8 +102,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
         fixup_bundle(\"$<TARGET_BUNDLE_DIR:${EXECUTABLE_NAME}>\" \"\" \"${DEP_DIR}\")
         " 
     )
-    # set(CPACK_GENERATOR "DragNDrop")
-    # include(CPack)
+    set(CPACK_GENERATOR "DragNDrop")
+    include(CPack)
 endif()
 
 # @ENDREGION PLATFORMS
