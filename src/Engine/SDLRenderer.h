@@ -16,7 +16,7 @@ namespace NesEm
 	class SDLRenderer final : public Renderer
 	{
 	public:
-		SDLRenderer(Window const& w);
+		SDLRenderer(Window const& w, bool maxWindow);
 		~SDLRenderer() override;
 
 		SDLRenderer(SDLRenderer const&) = delete;

@@ -50,7 +50,7 @@ namespace NesEm
 
 		uint64_t m_LastTime{ SDL_GetPerformanceCounter() };
 
-		const double m_SecondsPerCount = 1.0 / static_cast<double>(SDL_GetPerformanceFrequency());
+		const double m_SecondsPerCount{ 1.0 / static_cast<double>(SDL_GetPerformanceFrequency()) };
 
 		float m_MsPerFrame{ 16.7f };
 		float m_MsFixedTimeStep{ 20.f };

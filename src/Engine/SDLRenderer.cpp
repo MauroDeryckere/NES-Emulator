@@ -2,9 +2,12 @@
 
 namespace NesEm
 {
-	SDLRenderer::SDLRenderer(Window const& w) :
-		m_Window{w.title, w.width, w.height, w.flags}
+	SDLRenderer::SDLRenderer(Window const& w, bool maxWindow) :
+		m_Window{w.title, w.width, w.height, w.flags, maxWindow}
 	{
+		//Clamp aspect ratio to specific size range
+		//SDL_SetWindowAspectRatio(m_Window.pWindow, 1920 / 1080.f, 1920 / 1080.f);
+
 		SDL_Log("%s %d", "Running SDL Version: ", SDL_GetVersion());
 
 		if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
@@ -22,11 +25,6 @@ namespace NesEm
 			SDL_Quit();
 		}
 		SDL_Log("%s", "SDL Renderer initialized");
-
-		//SDL_SetWindowAspectRatio(m_Window.pWindow, 19 / 6.f, 19 / 6.f);
-		//SDL_SetDisplayContentScale()
-		//SDL_SetRenderScale(m_pRenderer, 2.0f, 2.0f);
-		//SDL_SetWindowFullscreen(m_Window.pWindow, true);
 	}
 
 	SDLRenderer::~SDLRenderer()
@@ -49,6 +47,9 @@ namespace NesEm
 
 	void SDLRenderer::Render() const
 	{
+		//Scale based on user monitor but keep logic at same "canvas size" for game
+		//SDL_SetRenderLogicalPresentation(m_pRenderer, 1920, 1080, SDL_LOGICAL_PRESENTATION_INTEGER_SCALE);
+
 		SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 100, 255);
 		SDL_RenderClear(m_pRenderer);
 

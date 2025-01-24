@@ -11,12 +11,12 @@ int main()
 
 	Window gameWindow{ 
 		"NES Emulator",
-		200,
-		200,
+		1920,
+		1080,
 		SDL_WINDOW_RESIZABLE
 		| SDL_WINDOW_HIGH_PIXEL_DENSITY
 	};
-	ServiceLocator::RegisterRenderer(std::make_unique<SDLRenderer>(gameWindow));
+	ServiceLocator::RegisterRenderer(std::make_unique<SDLRenderer>(gameWindow, true));
 
 	Renderer& renderer{ ServiceLocator::GetRenderer() };
 	auto& time = GameTime::GetInstance();
@@ -77,9 +77,7 @@ int main()
 		}
 
 		//Cap FPS
-
 		SDL_Delay(time.SleepTime());
-		//std::this_thread::sleep_for(std::chrono::milliseconds(time.SleepTime()));
 	}
 
     return 0;
