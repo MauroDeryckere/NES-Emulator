@@ -1,3 +1,5 @@
+# @REGION PROJECT SETUP
+
 cmake_minimum_required(VERSION 3.27)
 
 # Any output by targets -> binary dir
@@ -15,11 +17,19 @@ set(EXECUTABLE_NAME ${PROJECT_NAME})
 
 if(MSVC)
     if(NOT CMAKE_GENERATOR STREQUAL "Ninja")
-        add_definitions(/MP)				# parallelize each target, unless Ninja is the generator
+        add_definitions(/MP) # parallelize each target, unless Ninja is the generator
     endif()
 endif()
 
+if (APPLE)
+    # Disable shared builds on platforms where it does not make sense to use them
+    set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "")
+endif()
 
+# @ENDREGION PROJECT SETUP
+
+
+# @REGION SOURCE FILES & LIBRARIES
 
 # Sources
 add_subdirectory(src)
@@ -36,7 +46,10 @@ target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
 # Set cpp 23 standard
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 
+# @ENDREGION SOURCE FILES & LIBRARIES
 
+
+# @REGION PLATFORMS
 
 # set some extra configs for each platform
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES 
@@ -73,6 +86,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set(CPACK_GENERATOR "DragNDrop")
     include(CPack)
 endif()
+
+# @ENDREGION PLATFORMS
 
 # on Visual Studio, set our app as the default project
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT "${EXECUTABLE_NAME}")
