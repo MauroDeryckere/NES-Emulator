@@ -40,6 +40,12 @@ add_subdirectory(3rdParty EXCLUDE_FROM_ALL)
 # Link the 3rd party interface library to the project
 target_link_libraries(${PROJECT_NAME} PRIVATE 3RDPARTY)
 
+if (APPLE)
+	find_library(IO_LIB ImageIO)
+ 	find_library(CS_LIB CoreServices)
+	target_link_libraries(${EXECUTABLE_NAME} PUBLIC ${IO_LIB} ${CS_LIB})
+endif()
+
 # Enable all warnings
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
 # Set cpp 23 standard
@@ -49,12 +55,6 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 
 
 # @REGION PLATFORMS
-
-if (APPLE)
-	find_library(IO_LIB ImageIO)
- 	find_library(CS_LIB CoreServices)
-	target_link_libraries(${EXECUTABLE_NAME} PUBLIC ${IO_LIB} ${CS_LIB})
-endif()
 
 # Dealing with assets
 # We have some non-code resources that our application needs in order to work. How we deal with those differs per platform.
