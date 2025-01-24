@@ -3,6 +3,8 @@
 
 #include "Timer.h"
 
+#include "Emulator.h"
+
 #include <thread>
 
 int main()
@@ -27,7 +29,10 @@ int main()
 
 	Renderer& renderer{ ServiceLocator::GetRenderer() };
 	auto& time = GameTime::GetInstance();
-	time.SetFPS(60.f);
+	time.SetFPS(50.f);
+
+	// Initialize the NES emulator
+	Emulator emulator{ };
 
 
 	// toggle displaying fps in console window
