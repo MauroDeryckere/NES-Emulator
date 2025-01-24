@@ -28,7 +28,7 @@ namespace NesEm
 
 		[[nodiscard]] inline auto SleepTime() const noexcept
 		{
-			return (m_LastTime + std::chrono::milliseconds(static_cast<long>(m_MsPerFrame)) - std::chrono::high_resolution_clock::now());
+			return (m_LastTime + std::chrono::milliseconds(static_cast<uint64_t>(m_MsPerFrame)) - std::chrono::high_resolution_clock::now());
 		}
 
 		void SetFPS(float fps) noexcept
