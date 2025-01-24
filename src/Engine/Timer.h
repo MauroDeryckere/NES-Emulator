@@ -2,7 +2,7 @@
 #define NES_EMULATOR_TIME
 
 #include "Singleton.h"
-#include <chrono>
+#include <SDL3/SDL.h>
 
 namespace NesEm
 {
@@ -17,18 +17,19 @@ namespace NesEm
 
 		inline void Update() noexcept
 		{
-			using namespace std::chrono;
-
-			const auto currentTime = high_resolution_clock::now();
-			m_ElapsedSec = duration<float>(currentTime - m_LastTime).count();
+			const auto currentTime = SDL_GetPerformanceCounter();
+			m_ElapsedSec = static_cast<float>((currentTime - m_LastTime) * m_SecondsPerCount);
+			if (m_ElapsedSec < 0.0f)
+				m_ElapsedSec = 0.0f;
 
 			m_MsLag += m_ElapsedSec * 1000.f;
-			m_LastTime = std::chrono::high_resolution_clock::now();
+			m_LastTime = currentTime;
 		}
 
 		[[nodiscard]] inline auto SleepTime() const noexcept
 		{
-			return (m_LastTime + std::chrono::milliseconds(static_cast<uint64_t>(m_MsPerFrame)) - std::chrono::high_resolution_clock::now());
+			const auto sleepTime = m_LastTime * m_SecondsPerCount + m_MsPerFrame - SDL_GetPerformanceCounter() * m_SecondsPerCount;
+			return (sleepTime > 0.0f) ? static_cast<uint32_t>(sleepTime) : 0u;
 		}
 
 		void SetFPS(float fps) noexcept
@@ -47,7 +48,9 @@ namespace NesEm
 		GameTime() = default;
 		~GameTime() = default;
 
-		std::chrono::steady_clock::time_point m_LastTime{ std::chrono::high_resolution_clock::now() };
+		uint64_t m_LastTime{ SDL_GetPerformanceCounter() };
+
+		const double m_SecondsPerCount = 1.0 / static_cast<double>(SDL_GetPerformanceFrequency());
 
 		float m_MsPerFrame{ 16.7f };
 		float m_MsFixedTimeStep{ 20.f };

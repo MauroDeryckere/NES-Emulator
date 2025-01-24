@@ -77,7 +77,9 @@ int main()
 		}
 
 		//Cap FPS
-		std::this_thread::sleep_for(time.SleepTime());
+
+		SDL_Delay(time.SleepTime());
+		//std::this_thread::sleep_for(std::chrono::milliseconds(time.SleepTime()));
 	}
 
     return 0;
