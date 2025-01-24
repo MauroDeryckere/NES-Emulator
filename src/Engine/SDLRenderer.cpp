@@ -2,8 +2,8 @@
 
 namespace NesEm
 {
-	SDLRenderer::SDLRenderer(Window const& w, bool maxWindow) :
-		m_Window{w.title, w.width, w.height, w.flags, maxWindow}
+	SDLRenderer::SDLRenderer(Window const& w) :
+		m_Window{w}
 	{
 		//Clamp aspect ratio to specific size range
 		//SDL_SetWindowAspectRatio(m_Window.pWindow, 1920 / 1080.f, 1920 / 1080.f);

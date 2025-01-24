@@ -15,8 +15,15 @@ int main()
 		1080,
 		SDL_WINDOW_RESIZABLE
 		| SDL_WINDOW_HIGH_PIXEL_DENSITY
+		| SDL_WINDOW_MAXIMIZED
+		| SDL_WINDOW_INPUT_FOCUS
+		| SDL_WINDOW_MOUSE_FOCUS
+		| SDL_WINDOW_MOUSE_CAPTURE
+		| SDL_WINDOW_KEYBOARD_GRABBED,
+		16.f / 9.f,
+		16.f / 9.f
 	};
-	ServiceLocator::RegisterRenderer(std::make_unique<SDLRenderer>(gameWindow, true));
+	ServiceLocator::RegisterRenderer(std::make_unique<SDLRenderer>(gameWindow));
 
 	Renderer& renderer{ ServiceLocator::GetRenderer() };
 	auto& time = GameTime::GetInstance();

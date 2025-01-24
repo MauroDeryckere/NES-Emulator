@@ -17,6 +17,9 @@ namespace NesEm
 
 		//Flags for the window
 		uint64_t flags{};
+
+		float minAspectRatio{-1.f};
+		float maxAspectRatio{-1.f};
 	};
 }
 
