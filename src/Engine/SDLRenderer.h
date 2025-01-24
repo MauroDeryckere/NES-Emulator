@@ -2,9 +2,12 @@
 #define NES_EMULATOR_SDL_RENDERER
 
 //3rd party
-#pragma warning push 4820
-#include <SDL3/SDL.h>
-#pragma warning pop
+#pragma warning (push)
+#pragma warning (disable: 4820)
+#pragma warning (disable: 4514)
+#pragma warning (disable: 4548)
+	#include <SDL3/SDL.h>
+#pragma warning (pop)
 
 //Engine
 #include "SDLWindow.h"

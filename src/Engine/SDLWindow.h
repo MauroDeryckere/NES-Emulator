@@ -1,7 +1,13 @@
 #ifndef NES_EMULATOR_SDLWINDOW
 #define NES_EMULATOR_SDLWINDOW
 
-#include <SDL3/SDL.h>
+#pragma warning (push)
+#pragma warning (disable: 4820)
+#pragma warning (disable: 4514)
+#pragma warning (disable: 4548)
+	#include <SDL3/SDL.h>
+#pragma warning (pop)
+
 #include <string>
 #include "Window.h"
 

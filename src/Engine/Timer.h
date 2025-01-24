@@ -2,7 +2,12 @@
 #define NES_EMULATOR_TIME
 
 #include "Singleton.h"
-#include <SDL3/SDL.h>
+#pragma warning (push)
+#pragma warning (disable: 4820)
+#pragma warning (disable: 4514)
+#pragma warning (disable: 4548)
+	#include <SDL3/SDL.h>
+#pragma warning (pop)
 
 namespace NesEm
 {
