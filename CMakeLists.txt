@@ -68,6 +68,9 @@ endif()
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES 
     # On macOS, make a proper .app bundle instead of a bare executable
     MACOSX_BUNDLE TRUE
+
+    # Currently not building on mobile but keep this in, in case we do in the future
+
     # Set the Info.plist file for Apple Mobile platforms. Without this file, your app
     # will not launch. 
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/src/Info.plist.in"
