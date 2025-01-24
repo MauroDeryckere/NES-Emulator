@@ -1,15 +1,30 @@
 cmake_minimum_required(VERSION 3.27)
-project(NES_EMULATOR)
 
 # Any output by targets -> binary dir
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 
+# prevent installing to system directories. 
+set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE INTERNAL "")
+
+project(NES_EMULATOR)
+
+# Set the name of the executable
+set(EXECUTABLE_NAME ${PROJECT_NAME})
+
+if(MSVC)
+    if(NOT CMAKE_GENERATOR STREQUAL "Ninja")
+        add_definitions(/MP)				# parallelize each target, unless Ninja is the generator
+    endif()
+endif()
+
+
+
 # Sources
 add_subdirectory(src)
 # Create main executable and link to sources
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${EXECUTABLE_NAME} ${SOURCES})
 
 # Dependencies
 add_subdirectory(3rdParty)
@@ -21,19 +36,44 @@ target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
 # Set cpp 23 standard
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 
-# Set the install directory differently based on the platform
-if(APPLE)
-    set(INSTALL_PREFIX "/Applications/myapp")
-elseif(WIN32)
-    set(INSTALL_PREFIX "C:/Program Files/myapp")
-else()
-    set(INSTALL_PREFIX "/usr/local/myapp")
+
+
+# set some extra configs for each platform
+set_target_properties(${EXECUTABLE_NAME} PROPERTIES 
+    # On macOS, make a proper .app bundle instead of a bare executable
+    MACOSX_BUNDLE TRUE
+    # Set the Info.plist file for Apple Mobile platforms. Without this file, your app
+    # will not launch. 
+    MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/src/Info.plist.in"
+
+    # in Xcode, create a Scheme in the schemes dropdown for the app.
+    XCODE_GENERATE_SCHEME TRUE
+    # Identification for Xcode
+    XCODE_ATTRIBUTE_BUNDLE_IDENTIFIER "NES_EMULATOR"
+	XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "NES_EMULATOR"
+	XCODE_ATTRIBUTE_CURRENTYEAR "${CURRENTYEAR}"
+)
+
+# On macOS Platforms, ensure that the bundle is valid for distribution by calling fixup_bundle.
+# note that fixup_bundle does not work on iOS, so you will want to use static libraries 
+# or manually copy dylibs and set rpaths
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    # tell Install about the target, otherwise fixup won't know about the transitive dependencies
+    install(TARGETS ${EXECUTABLE_NAME}
+    	BUNDLE DESTINATION ./install COMPONENT Runtime
+   	    RUNTIME DESTINATION ./install/bin COMPONENT Runtime
+    )
+	
+    set(DEP_DIR "${CMAKE_BINARY_DIR}")  # where to look for dependencies when fixing up
+    INSTALL(CODE 
+        "include(BundleUtilities)
+        fixup_bundle(\"$<TARGET_BUNDLE_DIR:${EXECUTABLE_NAME}>\" \"\" \"${DEP_DIR}\")
+        " 
+    )
+    set(CPACK_GENERATOR "DragNDrop")
+    include(CPack)
 endif()
 
+# on Visual Studio, set our app as the default project
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT "${EXECUTABLE_NAME}")
 
-# Install rules - Apple
-install(TARGETS ${PROJECT_NAME}
-    RUNTIME DESTINATION bin  # Install the executable
-    LIBRARY DESTINATION lib  # For shared libraries, if you have any
-    ARCHIVE DESTINATION lib  # For static libraries, if you have any
-)
