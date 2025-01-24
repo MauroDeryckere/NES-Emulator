@@ -25,7 +25,8 @@ int main()
 
 	// toggle displaying fps in console window
 	constexpr bool displayFPS{ true };
-	float t = 0;
+	float fpsTimer{ 0.f };
+	auto fpsCount{ 0 };
 
 	bool isRunning{ true };
 
@@ -63,13 +64,15 @@ int main()
 				SteamAPI_RunCallbacks();
 		#endif*/
 
-		t += time.ElapsedSec();
+		fpsTimer += time.ElapsedSec();
+		++fpsCount;
 		if (displayFPS)
 		{
-			if (t >= 1.0f)
+			if (fpsTimer >= 1.0f)
 			{
-				t -= time.ElapsedSec();
-				SDL_Log("FPS: %f", 1.0f / time.ElapsedSec());
+				SDL_Log("FPS: %.1f", static_cast<float>(fpsCount) / fpsTimer);
+				fpsCount = 0;
+				fpsTimer -= 1.f;
 			}
 		}
 
