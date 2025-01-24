@@ -31,12 +31,12 @@ endif()
 # @REGION SOURCE FILES & LIBRARIES
 
 # Sources
-add_subdirectory(src)
+add_subdirectory(src EXCLUDE_FROM_ALL)
 # Create main executable and link to sources
 add_executable(${EXECUTABLE_NAME} ${SOURCES})
 
 # Dependencies
-add_subdirectory(3rdParty)
+add_subdirectory(3rdParty EXCLUDE_FROM_ALL)
 # Link the 3rd party interface library to the project
 target_link_libraries(${PROJECT_NAME} PRIVATE 3RDPARTY)
 
@@ -96,8 +96,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
         fixup_bundle(\"$<TARGET_BUNDLE_DIR:${EXECUTABLE_NAME}>\" \"\" \"${DEP_DIR}\")
         " 
     )
-    set(CPACK_GENERATOR "DragNDrop")
-    include(CPack)
+    # set(CPACK_GENERATOR "DragNDrop")
+    # include(CPack)
 endif()
 
 # @ENDREGION PLATFORMS
