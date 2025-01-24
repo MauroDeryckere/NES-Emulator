@@ -3,51 +3,40 @@
 #include <SDL3/SDL.h>
 #pragma warning pop
 
-#include "Window.h"
-
+#include "ServiceLocator.h"
+#include "SDLRenderer.h"
 int main()
 {
-	if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
+	using namespace NesEm;
+
+	Window gameWindow{ "NES Emulator", 800, 600, SDL_WINDOW_RESIZABLE};
+	ServiceLocator::RegisterRenderer(std::make_unique<SDLRenderer>(gameWindow));
+
+	Renderer& renderer{ ServiceLocator::GetRenderer() };
+
+	bool isRunning{ true };
+
+	while (isRunning)
 	{
-		SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, SDL_GetError());
-		SDL_Quit();
-		return -1;
-	}
-
-	{
-		//Width and height is not in pixels but depends on the platform/monitor
-		uint32_t constexpr windowWidth{ 800 };
-		uint32_t constexpr windowHeight{ 600 };
-		Window window{ "SDL Window", windowWidth, windowHeight, SDL_WINDOW_RESIZABLE };
-			
-
-		bool isRunning{ true };
-
-		while (isRunning)
+		//Handle Input & other events
+		SDL_Event event{ };
+		while(SDL_PollEvent(&event))
 		{
-			//Handle Input & other events
-			SDL_Event event{ };
-			while(SDL_PollEvent(&event))
+			switch (event.type)
 			{
-				switch (event.type)
-				{
-				case SDL_EVENT_QUIT:
-					isRunning = false;
-					break;
-				default: break;
-				}
+			case SDL_EVENT_QUIT:
+				isRunning = false;
+				break;
+			default: break;
 			}
 		}
 
 		//Update
 
 		//Render
-
-
+		renderer.Render();
 	}
-	//Quit specific subsystems or all of SDL
-	SDL_QuitSubSystem(SDL_INIT_VIDEO);
-	SDL_Quit();
+		
 
     return 0;
 }
