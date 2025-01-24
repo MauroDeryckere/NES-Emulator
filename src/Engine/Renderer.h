@@ -1,8 +1,6 @@
 #ifndef NES_EMULATOR_RENDERER
 #define NES_EMULATOR_RENDERER
 
-#include "Window.h"
-
 namespace NesEm
 {
 	class Renderer

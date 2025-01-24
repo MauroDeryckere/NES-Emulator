@@ -5,6 +5,7 @@
 
 #include "ServiceLocator.h"
 #include "SDLRenderer.h"
+
 int main()
 {
 	using namespace NesEm;
@@ -32,6 +33,8 @@ int main()
 		}
 
 		//Update
+
+		//Cpu emulation, ...
 
 		//Render
 		renderer.Render();
