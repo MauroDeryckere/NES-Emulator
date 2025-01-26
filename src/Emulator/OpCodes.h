@@ -2,7 +2,7 @@
 #define NES_EMULATOR_OPCODES_6502
 
 // Initialize the string implementation array for our instructions
-#define NES_EM_INIT_STRING_REPRESENTATION 1;
+#define NES_EM_INIT_STRING_REPRESENTATION 1
 
 namespace NesEm
 {

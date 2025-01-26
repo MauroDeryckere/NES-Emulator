@@ -32,7 +32,7 @@ namespace NesEm
 			SDL_assert(pWindow);
 			if (!pWindow)
 			{
-				SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, SDL_GetError());
+				SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "%s", SDL_GetError());
 				SDL_Quit();
 			}
 			else
