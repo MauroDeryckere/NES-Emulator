@@ -39,6 +39,21 @@ namespace NesEm
 	using _i = Instruction;
 	using _a = AddressingMode;
 
+	constexpr auto AD_ACC{ _a::Accumulator };
+	constexpr auto AD_ABS{ _a::Absolute };
+	constexpr auto AD_ABX{ _a::AbsoluteX };
+	constexpr auto AD_ABY{ _a::AbsoluteY };
+	constexpr auto AD_IMM{ _a::Immediate };
+	constexpr auto AD_IMP{ _a::Implied };
+	constexpr auto AD_IND{ _a::Indirect };
+	constexpr auto AD_INX{ _a::IndirectX };
+	constexpr auto AD_INY{ _a::IndirectY };
+	constexpr auto AD_REL{ _a::Relative };
+	constexpr auto AD_ZPG{ _a::ZeroPage };
+	constexpr auto AD_ZPX{ _a::ZeroPageX };
+	constexpr auto AD_ZPY{ _a::ZeroPageY };
+	constexpr auto AD_OTH{ _a::Other };
+
 	// Updating any of these constants means we will have to update some tables too
 	// But these should not have to be updated since the 6502 does not change anymore (unless we try a custom "mod", ...)
 	constexpr uint8_t ID_ADC{ 0 };
@@ -97,6 +112,7 @@ namespace NesEm
 	constexpr uint8_t ID_TXA{ 53 };
 	constexpr uint8_t ID_TXS{ 54 };
 	constexpr uint8_t ID_TYA{ 55 };
+	constexpr uint8_t ID_INV{ 56 };
 	constexpr uint8_t ID_INVALID_OPCODE{ 56 };
 
 	// 16x16 Array to represent all possible opcode bytes read from the ROM
@@ -104,7 +120,7 @@ namespace NesEm
 	// https://www.masswerk.at/6502/6502_instruction_set.html
 	static constexpr std::array<Instruction, 256> OPCODES_6502
 	{
-		_i{ ID_BRK, _a::Implied, 7 }, { ID_ORA, _a::IndirectX, 6 }, { ID_INVALID_OPCODE, _a::Other, 2 }, { ID_INVALID_OPCODE,_a::IndirectX, 8 }, { ID_INVALID_OPCODE, _a::ZeroPage, 3 }, { ID_ORA, _a::ZeroPage, 3 }, { ID_ASL, _a::ZeroPage, 5 }, { ID_INVALID_OPCODE, _a::ZeroPage, 5 }, { ID_PHP, _a::Implied, 3 }, { ID_ORA, _a::Immediate, 2 }, { ID_ASL, _a::Accumulator, 2 }, { ID_INVALID_OPCODE, _a::Immediate, 2 }, { ID_INVALID_OPCODE, _a::Absolute, 4 }, { ID_ORA, _a::Absolute, 4 }, { ID_ASL, _a::Absolute, 6 }, { ID_INVALID_OPCODE, _a::Absolute, 6 },
+		_i{ ID_BRK, AD_IMP, 7 }, { ID_ORA, AD_INX, 6 }, { ID_INV, AD_OTH, 2 }, { ID_INV,AD_INX, 8 }, { ID_INV, AD_ZPG, 3 }, { ID_ORA, AD_ZPG, 3 }, { ID_ASL, AD_ZPG, 5 }, { ID_INV, AD_ZPG, 5 }, { ID_PHP, AD_IMP, 3 }, { ID_ORA, AD_IMM, 2 }, { ID_ASL, AD_ACC, 2 }, { ID_INV, AD_IMM, 2 }, { ID_INV, AD_ABS, 4 }, { ID_ORA, AD_ABS, 4 }, { ID_ASL, AD_ABS, 6 }, { ID_INV, AD_ABS, 6 },
 		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
 		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
 		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
@@ -142,7 +158,7 @@ namespace NesEm
 	//	{ "BEQ", &a::BEQ, &a::REL, 2 }, { "SBC", &a::SBC, &a::IZY, 5 }, { "???", &a::XXX, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 8 }, { "???", &a::NOP, &a::IMP, 4 }, { "SBC", &a::SBC, &a::ZPX, 4 }, { "INC", &a::INC, &a::ZPX, 6 }, { "???", &a::XXX, &a::IMP, 6 }, { "SED", &a::SED, &a::IMP, 2 }, { "SBC", &a::SBC, &a::ABY, 4 }, { "NOP", &a::NOP, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 7 }, { "???", &a::NOP, &a::IMP, 4 }, { "SBC", &a::SBC, &a::ABX, 4 }, { "INC", &a::INC, &a::ABX, 7 }, { "???", &a::XXX, &a::IMP, 7 },
 	//};
 
-	#ifdef NES_EM_INIT_STRING_REPRESENTATION
+	#if NES_EM_INIT_STRING_REPRESENTATION
 	// String representation of all the opcodes, useful for debugging, disassembly,...
 	// Put in alphabetical for easy of use, index in array also commented next to each item  
 	// https://www.masswerk.at/6502/6502_instruction_set.html -> Instructions by Name
@@ -212,6 +228,11 @@ namespace NesEm
 
 #pragma region OpCodeFunctions
 	//TODO - provide functions for all opcodes
+	inline void ADC() noexcept
+	{
+		
+	}
+	// . . .
 #pragma endregion
 }
 
