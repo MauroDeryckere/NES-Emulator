@@ -1,50 +1,55 @@
 #include "CPU.h"
-#include "CPU.h"
-#include "CPU.h"
-#include "CPU.h"
+
+// 6502 opcodes & addressing stuff
+#include "OpCodes.h"
+
+#include <iostream>
 
 namespace NesEm
 {
-	inline uint16_t CPU::GetAddress(AddressingMode mode) noexcept
+	inline uint16_t CPU::GetAddress(AddressingMode mode, uint8_t& cycles) noexcept
 	{
 		switch (mode)
 		{
-		case CPU::AddressingMode::Accumulator:
+		case AddressingMode::Accumulator:
 			return 0;
 
-		case CPU::AddressingMode::Relative:
+		case AddressingMode::Relative:
 			return 0;
 
-		case CPU::AddressingMode::Immediate:
+		case AddressingMode::Immediate:
 			return 0;
 
-		case CPU::AddressingMode::ZeroPage:
+		case AddressingMode::ZeroPage:
 			return 0;
 
-		case CPU::AddressingMode::ZeroPageX:
+		case AddressingMode::ZeroPageX:
 			return 0;
 
-		case CPU::AddressingMode::ZeroPageY:
+		case AddressingMode::ZeroPageY:
 			return 0;
 		
-		case CPU::AddressingMode::Absolute:
+		case AddressingMode::Absolute:
+		{
 			uint16_t lo = Fetch();
 			uint16_t hi = Fetch();
 			return (hi << 8) | lo;
+			
+		}
 		
-		case CPU::AddressingMode::AbsoluteX:
+		case AddressingMode::AbsoluteX:
 			return 0;
 
-		case CPU::AddressingMode::AbsoluteY:
+		case AddressingMode::AbsoluteY:
 			return 0;
 
-		case CPU::AddressingMode::IndirectX:
+		case AddressingMode::Indirect:
 			return 0;
 
-		case CPU::AddressingMode::IndirectY:
+		case AddressingMode::IndirectX:
 			return 0;
 
-		case CPU::AddressingMode::NoneAddressing:
+		case AddressingMode::IndirectY:
 			return 0;
 
 		default: break;
@@ -58,7 +63,7 @@ namespace NesEm
 
 	void CPU::Clock() noexcept
 	{
-		if (cycles == 0)
+		if (m_CurrCycles == 0)
 		{
 			uint8_t const opcode{ Fetch() };
 

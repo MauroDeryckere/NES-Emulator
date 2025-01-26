@@ -16,7 +16,7 @@ namespace NesEm
 		Emulator& operator=(Emulator const&) = delete;
 		Emulator& operator=(Emulator&&) = delete;
 	private:
-
+		CPU m_Cpu{};
 	};
 }
 
