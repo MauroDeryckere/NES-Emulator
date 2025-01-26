@@ -39,9 +39,6 @@ add_executable(${EXECUTABLE_NAME} ${SOURCES})
 add_subdirectory(3rdParty EXCLUDE_FROM_ALL)
 # Link the 3rd party interface library to the project
 target_link_libraries(${PROJECT_NAME} PRIVATE 3RDPARTY)
-
-# Enable all warnings
-target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
 # Set cpp 23 standard
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 
