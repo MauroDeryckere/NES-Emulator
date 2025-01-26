@@ -4,6 +4,10 @@
 // Initialize the string implementation array for our instructions
 #define NES_EM_INIT_STRING_REPRESENTATION 1
 
+#include <vector>
+#include <array>
+#include <functional>
+
 namespace NesEm
 {
 #pragma region AddressingModes
@@ -26,12 +30,300 @@ namespace NesEm
 	};
 #pragma endregion
 
+#pragma region OpCodeFunctions
+	inline void ADC() noexcept
+	{
+
+	}
+
+	inline void AND() noexcept
+	{
+
+	}
+
+	inline void ASL() noexcept
+	{
+
+	}
+
+	inline void BCC() noexcept
+	{
+
+	}
+
+	inline void BCS() noexcept
+	{
+
+	}
+
+	inline void BEQ() noexcept
+	{
+
+	}
+
+	inline void BIT() noexcept
+	{
+
+	}
+
+	inline void BMI() noexcept
+	{
+
+	}
+
+	inline void BNE() noexcept
+	{
+
+	}
+
+	inline void BPL() noexcept
+	{
+
+	}
+
+	inline void BRK() noexcept
+	{
+
+	}
+
+	inline void BVC() noexcept
+	{
+
+	}
+
+	inline void BVS() noexcept
+	{
+
+	}
+
+	inline void CLC() noexcept
+	{
+
+	}
+
+	inline void CLD() noexcept
+	{
+
+	}
+
+	inline void CLI() noexcept
+	{
+
+	}
+
+	inline void CLV() noexcept
+	{
+
+	}
+
+	inline void CMP() noexcept
+	{
+
+	}
+
+	inline void CPX() noexcept
+	{
+
+	}
+
+	inline void CPY() noexcept
+	{
+
+	}
+
+	inline void DEC() noexcept
+	{
+
+	}
+
+	inline void DEX() noexcept
+	{
+
+	}
+
+	inline void DEY() noexcept
+	{
+
+	}
+
+	inline void EOR() noexcept
+	{
+
+	}
+
+	inline void INC() noexcept
+	{
+
+	}
+
+	inline void INX() noexcept
+	{
+
+	}
+
+	inline void INY() noexcept
+	{
+
+	}
+
+	inline void JMP() noexcept
+	{
+		
+	}
+
+	inline void JSR() noexcept
+	{
+
+	}
+
+	inline void LDA() noexcept
+	{
+
+	}
+
+	inline void LDX() noexcept
+	{
+
+	}
+
+	inline void LDY() noexcept
+	{
+
+	}
+
+	inline void LSR() noexcept
+	{
+
+	}
+
+	inline void NOP() noexcept
+	{
+
+	}
+
+	inline void ORA() noexcept
+	{
+
+	}
+
+	inline void PHA() noexcept
+	{
+
+	}
+
+	inline void PHP() noexcept
+	{
+
+	}
+
+	inline void PLA() noexcept
+	{
+
+	}
+
+	inline void PLP() noexcept
+	{
+
+	}
+
+	inline void ROL() noexcept
+	{
+
+	}
+
+	inline void ROR() noexcept
+	{
+
+	}
+
+	inline void RTI() noexcept
+	{
+
+	}
+
+	inline void RTS() noexcept
+	{
+
+	}
+
+	inline void SBC() noexcept
+	{
+
+	}
+
+	inline void SEC() noexcept
+	{
+
+	}
+
+	inline void SED() noexcept
+	{
+
+	}
+
+	inline void SEI() noexcept
+	{
+
+	}
+
+	inline void STA() noexcept
+	{
+
+	}
+
+	inline void STX() noexcept
+	{
+
+	}
+
+	inline void STY() noexcept
+	{
+
+	}
+
+	inline void TAX() noexcept
+	{
+
+	}
+
+	inline void TAY() noexcept
+	{
+
+	}
+
+	inline void TSX() noexcept
+	{
+
+	}
+
+	inline void TXA() noexcept
+	{
+
+	}
+
+	inline void TXS() noexcept
+	{
+
+	}
+
+	inline void TYA() noexcept
+	{
+
+	}
+
+	// Invalid opcode
+	inline void INV() noexcept
+	{
+
+	}
+#pragma endregion
+
 #pragma region OpCodesData
 	//Struct to represent a single instruction with all necessary data
 	struct Instruction final
 	{
-		uint8_t instructionId; // Id in the function table & string representation table
-		AddressingMode addrMode; // What the address mode of the instruction is
+		uint8_t id; // Id in the function table & string representation table
+		AddressingMode mode; // What the address mode of the instruction is
 		uint8_t cycles; // How many cycles the instruction takes
 	};
 
@@ -39,6 +331,7 @@ namespace NesEm
 	using _i = Instruction;
 	using _a = AddressingMode;
 
+#pragma region OpCodesDataConstants
 	constexpr auto AD_ACC{ _a::Accumulator };
 	constexpr auto AD_ABS{ _a::Absolute };
 	constexpr auto AD_ABX{ _a::AbsoluteX };
@@ -114,33 +407,35 @@ namespace NesEm
 	constexpr uint8_t ID_TYA{ 55 };
 	constexpr uint8_t ID_INV{ 56 };
 	constexpr uint8_t ID_INVALID_OPCODE{ 56 };
-
+#pragma endregion
+#pragma region OpCodesTables
 	// 16x16 Array to represent all possible opcode bytes read from the ROM
+	// $00 -> $FF (0x00 -> 0xFF) 
 	// Table with all opcodes for reference: 
 	// https://www.masswerk.at/6502/6502_instruction_set.html
 	static constexpr std::array<Instruction, 256> OPCODES_6502
-	{
-		_i{ ID_BRK, AD_IMP, 7 }, { ID_ORA, AD_INX, 6 }, { ID_INV, AD_OTH, 2 }, { ID_INV,AD_INX, 8 }, { ID_INV, AD_ZPG, 3 }, { ID_ORA, AD_ZPG, 3 }, { ID_ASL, AD_ZPG, 5 }, { ID_INV, AD_ZPG, 5 }, { ID_PHP, AD_IMP, 3 }, { ID_ORA, AD_IMM, 2 }, { ID_ASL, AD_ACC, 2 }, { ID_INV, AD_IMM, 2 }, { ID_INV, AD_ABS, 4 }, { ID_ORA, AD_ABS, 4 }, { ID_ASL, AD_ABS, 6 }, { ID_INV, AD_ABS, 6 },
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-		_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+	{	   /*				0		     */		 /*				  1		       */		/*				2		     */	      /*			  3		       */		/*				4		     */		  /*			   5		    */		/*			 	 6		      */	  /*			   7		    */		 /*				 8		      */	   /*			    9		     */		 /*				  A		       */	   /*				B		     */		 /*				  C		       */	   /*				D		     */		  /*			   E		    */		/*				 F		      */
+		/*0*/	_i{ ID_BRK, AD_IMP, 7 }, { ID_ORA, AD_INX, 6 }, { ID_INV, AD_OTH, 2 }, { ID_INV, AD_INX, 8 }, { ID_INV, AD_ZPG, 3 }, { ID_ORA, AD_ZPG, 3 }, { ID_ASL, AD_ZPG, 5 }, { ID_INV, AD_ZPG, 5 }, { ID_PHP, AD_IMP, 3 }, { ID_ORA, AD_IMM, 2 }, { ID_ASL, AD_ACC, 2 }, { ID_INV, AD_IMM, 2 }, { ID_INV, AD_ABS, 4 }, { ID_ORA, AD_ABS, 4 }, { ID_ASL, AD_ABS, 6 }, { ID_INV, AD_ABS, 6 },
+		/*1*/	_i{ ID_BPL, AD_REL, 2 }, { ID_ORA, AD_INY, 5 }, { ID_INV, AD_OTH, 2 }, { ID_INV, AD_INY, 8 }, { ID_INV, AD_ZPX, 4 }, { ID_ORA, AD_ZPX, 4 }, { ID_ASL, AD_ZPX, 6 }, { ID_INV, AD_ZPX, 6 }, { ID_CLC ,AD_IMP, 2 }, { ID_ORA, AD_ABY, 4 }, { ID_INV, AD_IMP, 2 }, { ID_INV, AD_ABY, 7 }, { ID_INV, AD_ABX, 4 }, { ID_ORA, AD_ABX, 4 }, { ID_ASL, AD_ABX, 7 }, { ID_INV, AD_ABX, 7 },
+		/*2*/	_i{ ID_JSR, AD_ABS, 6 }, { ID_AND, AD_INX, 6 }, { ID_INV, AD_OTH, 2 }, { ID_INV, AD_INX, 8 }, { ID_BIT, AD_ZPG, 3 }, { ID_AND, AD_ZPG, 3 }, { ID_ROL, AD_ZPG, 5 }, { ID_INV, AD_ZPG, 5 }, { ID_PLP, AD_IMP, 4 }, { ID_AND, AD_IMM, 2 }, { ID_ROL, AD_ACC, 2 }, { ID_INV, AD_IMM, 2 }, { ID_BIT, AD_ABS, 4 }, { ID_AND, AD_ABS, 4 }, { ID_ROL, AD_ABS, 6 }, { ID_INV, AD_ABS, 6 },
+		/*3*/	_i{ ID_BMI, AD_REL, 2 }, { ID_AND, AD_INY, 5 }, { ID_INV, AD_OTH, 2 }, { ID_INV, AD_INY, 8 }, { ID_INV, AD_ZPX, 4 }, { ID_AND, AD_ZPX, 4 }, { ID_ROL, AD_ZPX, 6 }, { ID_INV, AD_ZPX, 6 }, { ID_SEC, AD_IMP, 2 }, { ID_AND, AD_ABY, 4 }, { ID_INV, AD_IMP, 2 }, { ID_INV, AD_ABY, 7 }, { ID_INV, AD_ABX, 4 }, { ID_AND, AD_ABX, 4 }, { ID_ROL, AD_ABX, 7 }, { ID_INV, AD_ABX, 7 },
+		/*4*/	_i{ ID_RTI, AD_IMP, 6 }, { ID_EOR, AD_INX, 6 }, { ID_INV, AD_OTH, 2 }, { ID_INV, AD_INX, 8 }, { ID_INV, AD_ZPG, 3 }, { ID_EOR, AD_ZPG, 3 }, { ID_LSR, AD_ZPG, 5 }, { ID_INV, AD_ZPG, 5 }, { ID_PHA, AD_IMP, 3 }, { ID_EOR, AD_IMM, 2 }, { ID_LSR, AD_ACC, 2 }, { ID_INV, AD_IMM, 2 }, { ID_JMP, AD_ABS, 3 }, { ID_EOR, AD_ABS, 4 }, { ID_LSR, AD_ABS, 6 }, { ID_INV, AD_ABS, 6 },
+		/*5*/	_i{ ID_BVC, AD_REL, 2 }, { ID_EOR, AD_INY, 5 }, { ID_INV, AD_OTH, 2 }, { ID_INV, AD_INY, 8 }, { ID_INV, AD_ZPX, 4 }, { ID_EOR, AD_ZPX, 4 }, { ID_LSR, AD_ZPX, 6 }, { ID_INV, AD_ZPX, 6 }, { ID_CLI, AD_IMP, 2 }, { ID_EOR, AD_ABY, 4 }, { ID_INV, AD_IMP, 2 }, { ID_INV, AD_ABY, 7 }, { ID_INV, AD_ABX, 4 }, { ID_EOR, AD_ABX, 4 }, { ID_LSR, AD_ABX, 7 }, { ID_INV, AD_ABX, 7 },
+		/*6*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+		/*7*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+		/*8*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+		/*9*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+		/*A*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+		/*B*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+		/*C*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+		/*D*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+		/*E*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+		/*F*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
 	};
 
 	//One lone coders table just as an extra comparison to make sure all our cycles are correct
 	//{
-	//	{ "BRK", & a::BRK, & a::IMM, 7 }, { "ORA", &a::ORA, &a::IZX, 6 }, { "???", &a::XXX, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 8 }, { "???", &a::NOP, &a::IMP, 3 }, { "ORA", &a::ORA, &a::ZP0, 3 }, { "ASL", &a::ASL, &a::ZP0, 5 }, { "???", &a::XXX, &a::IMP, 5 }, { "PHP", &a::PHP, &a::IMP, 3 }, { "ORA", &a::ORA, &a::IMM, 2 }, { "ASL", &a::ASL, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 2 }, { "???", &a::NOP, &a::IMP, 4 }, { "ORA", &a::ORA, &a::ABS, 4 }, { "ASL", &a::ASL, &a::ABS, 6 }, { "???", &a::XXX, &a::IMP, 6 },
+	//	{ "BRK", &a::BRK, &a::IMM, 7 }, { "ORA", &a::ORA, &a::IZX, 6 }, { "???", &a::XXX, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 8 }, { "???", &a::NOP, &a::IMP, 3 }, { "ORA", &a::ORA, &a::ZP0, 3 }, { "ASL", &a::ASL, &a::ZP0, 5 }, { "???", &a::XXX, &a::IMP, 5 }, { "PHP", &a::PHP, &a::IMP, 3 }, { "ORA", &a::ORA, &a::IMM, 2 }, { "ASL", &a::ASL, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 2 }, { "???", &a::NOP, &a::IMP, 4 }, { "ORA", &a::ORA, &a::ABS, 4 }, { "ASL", &a::ASL, &a::ABS, 6 }, { "???", &a::XXX, &a::IMP, 6 },
 	//	{ "BPL", &a::BPL, &a::REL, 2 }, { "ORA", &a::ORA, &a::IZY, 5 }, { "???", &a::XXX, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 8 }, { "???", &a::NOP, &a::IMP, 4 }, { "ORA", &a::ORA, &a::ZPX, 4 }, { "ASL", &a::ASL, &a::ZPX, 6 }, { "???", &a::XXX, &a::IMP, 6 }, { "CLC", &a::CLC, &a::IMP, 2 }, { "ORA", &a::ORA, &a::ABY, 4 }, { "???", &a::NOP, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 7 }, { "???", &a::NOP, &a::IMP, 4 }, { "ORA", &a::ORA, &a::ABX, 4 }, { "ASL", &a::ASL, &a::ABX, 7 }, { "???", &a::XXX, &a::IMP, 7 },
 	//	{ "JSR", &a::JSR, &a::ABS, 6 }, { "AND", &a::AND, &a::IZX, 6 }, { "???", &a::XXX, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 8 }, { "BIT", &a::BIT, &a::ZP0, 3 }, { "AND", &a::AND, &a::ZP0, 3 }, { "ROL", &a::ROL, &a::ZP0, 5 }, { "???", &a::XXX, &a::IMP, 5 }, { "PLP", &a::PLP, &a::IMP, 4 }, { "AND", &a::AND, &a::IMM, 2 }, { "ROL", &a::ROL, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 2 }, { "BIT", &a::BIT, &a::ABS, 4 }, { "AND", &a::AND, &a::ABS, 4 }, { "ROL", &a::ROL, &a::ABS, 6 }, { "???", &a::XXX, &a::IMP, 6 },
 	//	{ "BMI", &a::BMI, &a::REL, 2 }, { "AND", &a::AND, &a::IZY, 5 }, { "???", &a::XXX, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 8 }, { "???", &a::NOP, &a::IMP, 4 }, { "AND", &a::AND, &a::ZPX, 4 }, { "ROL", &a::ROL, &a::ZPX, 6 }, { "???", &a::XXX, &a::IMP, 6 }, { "SEC", &a::SEC, &a::IMP, 2 }, { "AND", &a::AND, &a::ABY, 4 }, { "???", &a::NOP, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 7 }, { "???", &a::NOP, &a::IMP, 4 }, { "AND", &a::AND, &a::ABX, 4 }, { "ROL", &a::ROL, &a::ABX, 7 }, { "???", &a::XXX, &a::IMP, 7 },
@@ -158,10 +453,10 @@ namespace NesEm
 	//	{ "BEQ", &a::BEQ, &a::REL, 2 }, { "SBC", &a::SBC, &a::IZY, 5 }, { "???", &a::XXX, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 8 }, { "???", &a::NOP, &a::IMP, 4 }, { "SBC", &a::SBC, &a::ZPX, 4 }, { "INC", &a::INC, &a::ZPX, 6 }, { "???", &a::XXX, &a::IMP, 6 }, { "SED", &a::SED, &a::IMP, 2 }, { "SBC", &a::SBC, &a::ABY, 4 }, { "NOP", &a::NOP, &a::IMP, 2 }, { "???", &a::XXX, &a::IMP, 7 }, { "???", &a::NOP, &a::IMP, 4 }, { "SBC", &a::SBC, &a::ABX, 4 }, { "INC", &a::INC, &a::ABX, 7 }, { "???", &a::XXX, &a::IMP, 7 },
 	//};
 
-	#if NES_EM_INIT_STRING_REPRESENTATION
-	// String representation of all the opcodes, useful for debugging, disassembly,...
-	// Put in alphabetical for easy of use, index in array also commented next to each item  
-	// https://www.masswerk.at/6502/6502_instruction_set.html -> Instructions by Name
+#if NES_EM_INIT_STRING_REPRESENTATION
+// String representation of all the opcodes, useful for debugging, disassembly,...
+// Put in alphabetical for easy of use, index in array also commented next to each item  
+// https://www.masswerk.at/6502/6502_instruction_set.html -> Instructions by Name
 	static constexpr std::array<const char*, 57> OPCODES_6502_NAMES
 	{
 		"ADC", // 0
@@ -223,16 +518,71 @@ namespace NesEm
 		// Invalid Opcode
 		"???"  // 56
 	};
-	#endif
-#pragma endregion
+#endif
 
-#pragma region OpCodeFunctions
-	//TODO - provide functions for all opcodes
-	inline void ADC() noexcept
+	using OpcodeFunction = void (*)();
+	static constexpr std::array<OpcodeFunction, 57> OPCODES_6502_FUNCTIONS
 	{
-		
-	}
-	// . . .
+		ADC, // 0
+		AND, // 1
+		ASL, // 2
+		BCC, // 3
+		BCS, // 4
+		BEQ, // 5
+		BIT, // 6
+		BMI, // 7
+		BNE, // 8
+		BPL, // 9
+		BRK, // 10
+		BVC, // 11
+		BVS, // 12
+		CLC, // 13
+		CLD, // 14
+		CLI, // 15
+		CLV, // 16
+		CMP, // 17
+		CPX, // 18
+		CPY, // 19
+		DEC, // 20
+		DEX, // 21
+		DEY, // 22
+		EOR, // 23
+		INC, // 24
+		INX, // 25
+		INY, // 26
+		JMP, // 27
+		JSR, // 28
+		LDA, // 29
+		LDX, // 30
+		LDY, // 31
+		LSR, // 32
+		NOP, // 33
+		ORA, // 34
+		PHA, // 35
+		PHP, // 36
+		PLA, // 37
+		PLP, // 38
+		ROL, // 39
+		ROR, // 40
+		RTI, // 41
+		RTS, // 42
+		SBC, // 43
+		SEC, // 44
+		SED, // 45
+		SEI, // 46
+		STA, // 47
+		STX, // 48
+		STY, // 49
+		TAX, // 50
+		TAY, // 51
+		TSX, // 52
+		TXA, // 53
+		TXS, // 54
+		TYA, // 55
+		// Invalid opcode
+		INV  // 56
+	};
+#pragma endregion
 #pragma endregion
 }
 
