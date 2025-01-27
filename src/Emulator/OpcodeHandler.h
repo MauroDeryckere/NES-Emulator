@@ -7,6 +7,16 @@
 		#define NES_EM_INIT_STRING_REPRESENTATION 1
 	#endif
 
+// For MSVC
+#if defined(_MSC_VER)
+#define FORCE_INLINE __forceinline
+// For GCC and Clang
+#elif defined(__GNUC__) || defined(__clang__)
+#define FORCE_INLINE __attribute__((always_inline))
+#else
+#define FORCE_INLINE inline
+#endif
+
 #include <cstdint>
 #include <array>
 
@@ -288,7 +298,7 @@ namespace NesEm
 			return true;
 		}
 
-		inline static bool BPL() noexcept
+		FORCE_INLINE inline static bool BPL() noexcept
 		{
 			return true;
 		}
