@@ -1,11 +1,16 @@
 #ifndef NES_EMULATOR_OPCODEHANDLER
 #define NES_EMULATOR_OPCODEHANDLER
 
+
+// Configuration
+#define NES_EM_USE_STATIC_CONSTEXR_TABLE 1
 #define NES_EM_DEBUG_MODE 1
-	#if NES_EM_DEBUG_MODE
-	// Initialize the string implementation array for our instructions
-		#define NES_EM_INIT_STRING_REPRESENTATION 1
-	#endif
+
+// Defines required when in debug or other config modes
+#if NES_EM_DEBUG_MODE
+// Initialize the string implementation array for our instructions
+	#define NES_EM_INIT_STRING_REPRESENTATION 1
+#endif
 
 // Compiler specific force inline
 // For MSVC
@@ -16,6 +21,13 @@
 	#define FORCE_INLINE __attribute__((always_inline))
 #else
 	#define FORCE_INLINE inline
+#endif
+
+// Allow swapping between static and non static tables
+#if NES_EM_USE_STATIC_CONSTEXR_TABLE
+	#define NES_EM_TABLE static constexpr
+#else
+	#define NES_EM_TABLE
 #endif
 
 
@@ -163,7 +175,7 @@ namespace NesEm
 		// $00 -> $FF (0x00 -> 0xFF) 
 		// Table with all opcodes for reference: 
 		// https://www.masswerk.at/6502/6502_instruction_set.html
-		inline static constexpr std::array<OpcodeHandler::Instruction, 256> OPCODES_6502
+		NES_EM_TABLE std::array<Instruction, 256> OPCODES_6502
 		{	           /*			0		  */	  /*		 1		 */		 /*	       2	    */	    /*	      3		  */      /*         4		 */		 /*		   5	   */	    /*	      6		  */	  /*	    7		*/		 /*		   8	   */	   /*		  9		 */		  /*	    A		*/	     /*		   B	   */	   /*	     C		 */	      /*	    D		*/		 /*		   E	  */	   /*	     F		 */
 			/*0*/	_i{ _o::BRK, AD_IMP, 7 }, { _o::ORA, AD_INX, 6 }, { _o::INV, AD_OTH, 2 }, { _o::INV, AD_INX, 8 }, { _o::INV, AD_ZPG, 3 }, { _o::ORA, AD_ZPG, 3 }, { _o::ASL, AD_ZPG, 5 }, { _o::INV, AD_ZPG, 5 }, { _o::PHP, AD_IMP, 3 }, { _o::ORA, AD_IMM, 2 }, { _o::ASL, AD_ACC, 2 }, { _o::INV, AD_IMM, 2 }, { _o::INV, AD_ABS, 4 }, { _o::ORA, AD_ABS, 4 }, { _o::ASL, AD_ABS, 6 }, { _o::INV, AD_ABS, 6 },
 			/*1*/	_i{ _o::BPL, AD_REL, 2 }, { _o::ORA, AD_INY, 5 }, { _o::INV, AD_OTH, 2 }, { _o::INV, AD_INY, 8 }, { _o::INV, AD_ZPX, 4 }, { _o::ORA, AD_ZPX, 4 }, { _o::ASL, AD_ZPX, 6 }, { _o::INV, AD_ZPX, 6 }, { _o::CLC ,AD_IMP, 2 }, { _o::ORA, AD_ABY, 4 }, { _o::INV, AD_IMP, 2 }, { _o::INV, AD_ABY, 7 }, { _o::INV, AD_ABX, 4 }, { _o::ORA, AD_ABX, 4 }, { _o::ASL, AD_ABX, 7 }, { _o::INV, AD_ABX, 7 },
@@ -187,7 +199,7 @@ namespace NesEm
 	// String representation of all the opcodes, useful for debugging, disassembly,...
 	// Put in alphabetical for easy of use, index in array also commented next to each item  
 	// https://www.masswerk.at/6502/6502_instruction_set.html -> Instructions by Name
-	inline static constexpr std::array<const char*, 57> OPCODES_6502_NAMES{
+	NES_EM_TABLE std::array<const char*, 57> OPCODES_6502_NAMES{
 			"ADC", // 0
 			"AND", // 1
 			"ASL", // 2
@@ -544,7 +556,7 @@ namespace NesEm
 #pragma endregion
 		// Table of function pointers for each opcode
 		using OpcodeFunction = bool (*)();
-		inline static constexpr std::array<OpcodeFunction, 57> OPCODES_6502_FUNCTIONS
+		NES_EM_TABLE std::array<OpcodeFunction, 57> OPCODES_6502_FUNCTIONS
 		{
 			ADC, // 0
 			AND, // 1
