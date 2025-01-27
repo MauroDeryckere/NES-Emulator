@@ -2,7 +2,10 @@
 #define NES_EMULATOR_CPU
 
 #include <cstdint>
+
 #include "NESMemory.h"
+
+#include "OpcodeHandler.h"
 
 /* Various sources used during development of the CPU of our emulator: 
  * https://medium.com/@guilospanck/the-journey-of-writing-a-nes-emulator-part-i-the-cpu-6e83b50baa37
@@ -11,12 +14,8 @@
  * https://skilldrick.github.io/easy6502/
  */
 
-
 namespace NesEm
 {
-	// Forward declare the Addressing mode enum class since we use it in some private functions
-	enum class AddressingMode : uint8_t;
-
 	class CPU final
 	{
 	public:
@@ -27,7 +26,12 @@ namespace NesEm
 		CPU(CPU&&) = delete;
 		CPU& operator=(CPU const&) = delete;
 		CPU& operator=(CPU&&) = delete;
+
 	private:
+		// Opcode handler should be friended since we do need access to some private variables
+		// Like editing registers, ...
+		friend class OpcodeHandler;
+		OpcodeHandler m_OpcodeHandler{  };
 		NESMemory m_Memory{  };
 
 		uint8_t m_Accumulator{ 0 };
@@ -38,6 +42,7 @@ namespace NesEm
 		uint8_t m_StackPointer{ 0 };
 		uint8_t m_StatusRegister{ 0 };
 
+		//Counter of cycles to be executed before next instruction may be executed
 		uint8_t m_CurrCycles{ 0 };
 
 		enum class StatusFlags : uint8_t
@@ -52,14 +57,11 @@ namespace NesEm
 			N = (1 << 7)  // Negative
 		};
 		// Functions to adjust status flags TODO
-		[[nodiscard]] inline uint16_t GetAddress(AddressingMode mode, uint8_t& cycles) noexcept;
 
-		// In case an illegal opcode is executed
-		inline void IllegalOpcode() noexcept {  };
-
+		// Memory
 		[[nodiscard]] inline uint8_t Fetch() noexcept;
 
-		//Stack
+		// Stack
 		void Push(uint8_t value) noexcept;
 		[[nodiscard]] inline uint8_t Pop() noexcept;
 

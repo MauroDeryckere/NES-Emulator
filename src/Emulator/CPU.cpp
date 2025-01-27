@@ -1,82 +1,74 @@
 #include "CPU.h"
 
-// 6502 opcodes & addressing stuff
-#include "OpCodes.h"
-
-#include <iostream>
-
 namespace NesEm
 {
-	inline uint16_t CPU::GetAddress(AddressingMode mode, uint8_t& cycles) noexcept
-	{
-		switch (mode)
-		{
-		case AddressingMode::Accumulator:
-			return 0;
+	//Cycles by ref
+	//Address return val
 
-		case AddressingMode::Relative:
-			return 0;
+	//inline uint8_t CPU::CalculateAddressModeCycles(AddressingMode mode) noexcept
+	//{
+	//	switch (mode)
+	//	{
+	//	case AddressingMode::Accumulator:
 
-		case AddressingMode::Immediate:
-			return 0;
+	//	case AddressingMode::Relative:
 
-		case AddressingMode::ZeroPage:
-			return 0;
+	//	case AddressingMode::Immediate:
 
-		case AddressingMode::ZeroPageX:
-			return 0;
+	//	case AddressingMode::ZeroPage:
 
-		case AddressingMode::ZeroPageY:
-			return 0;
-		
-		case AddressingMode::Absolute:
-		{
-			uint16_t lo = Fetch();
-			uint16_t hi = Fetch();
-			return (hi << 8) | lo;
-			
-		}
-		
-		case AddressingMode::AbsoluteX:
-			return 0;
+	//	case AddressingMode::ZeroPageX:
 
-		case AddressingMode::AbsoluteY:
-			return 0;
+	//	case AddressingMode::ZeroPageY:
+	//	
+	//	case AddressingMode::Absolute:
+	//	{
+	//		uint8_t const lo{ m_Memory.Read(m_ProgramCounter++) };
+	//		uint8_t const hi{ m_Memory.Read(m_ProgramCounter++) };
+	//		// address = (hi << 8) | lo;
+	//		return 0;
+	//	}
+	//	
+	//	case AddressingMode::AbsoluteX:
 
-		case AddressingMode::Indirect:
-			return 0;
+	//	case AddressingMode::AbsoluteY:
 
-		case AddressingMode::IndirectX:
-			return 0;
+	//	case AddressingMode::Indirect:
 
-		case AddressingMode::IndirectY:
-			return 0;
+	//	case AddressingMode::IndirectX:
 
-		default: break;
-		}
+	//	case AddressingMode::IndirectY:
 
-	}
+	//	default: break;
+	//	}
+
+	//}
 	inline uint8_t CPU::Fetch() noexcept
 	{
-		return m_Memory.Read(m_ProgramCounter++);
+		//TODO
+		return 0;
 	}
 
 	void CPU::Clock() noexcept
 	{
 		if (m_CurrCycles == 0)
 		{
-			uint8_t const opcode{ Fetch() };
+			// Get correct code from table & increase program counter
+			uint8_t const opcode{ m_Memory.Read(m_ProgramCounter++) };
 
-			// Get correct code from table
-							
 			// Update cycles based on instruction from the table
+			//m_CurrCycles = OPCODES_6502[opcode].cycles;
 
 			// Call the address mode function
+			//uint8_t addedCycles{ CalculateAddressModeCycles(OPCODES_6502[opcode].mode) };
 
 			// Call the opcode function
+			//if (OPCODES_6502_FUNCTIONS[OPCODES_6502[opcode].id]())
+			//{
+			//	m_CurrCycles += addedCycles;
+			//}
 		}
 
-
-		
+		--m_CurrCycles;
 	}
 }
