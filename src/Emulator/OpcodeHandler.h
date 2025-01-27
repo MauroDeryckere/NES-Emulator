@@ -27,7 +27,7 @@
 #if NES_EM_USE_STATIC_CONSTEXR_TABLE
 	#define NES_EM_TABLE static constexpr
 #else
-	#define NES_EM_TABLE
+	#define NES_EM_TABLE const
 #endif
 
 
