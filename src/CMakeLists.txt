@@ -4,6 +4,7 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Engine/SDLRenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Emulator/Emulator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Emulator/CPU.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Emulator/OpcodeHandler.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Emulator/NESMemory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/iosLaunchScreen.storyboard

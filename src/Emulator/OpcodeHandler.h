@@ -37,6 +37,8 @@
 
 namespace NesEm
 {
+	class CPU;
+
 	// Class handles anything related to opcodes for the 6502
 	// This allows us to have an easily extendable code base in case other opcode handlers would be added (SNES, ...)
 	class OpcodeHandler final
@@ -176,7 +178,7 @@ namespace NesEm
 		// Table with all opcodes for reference: 
 		// https://www.masswerk.at/6502/6502_instruction_set.html
 		NES_EM_TABLE std::array<Instruction, 256> OPCODES_6502
-		{	           /*			0		  */	  /*		 1		 */		 /*	       2	    */	    /*	      3		  */      /*         4		 */		 /*		   5	   */	    /*	      6		  */	  /*	    7		*/		 /*		   8	   */	   /*		  9		 */		  /*	    A		*/	     /*		   B	   */	   /*	     C		 */	      /*	    D		*/		 /*		   E	  */	   /*	     F		 */
+		{	           /*			         0			  */	  /*		            1		     */		 /*					   2			*/	    /*					  3			   */      /*					 4			  */	  /*					5			 */	     /*					   6		     */		 /*					  7				*/		/*					 8			  */	   /*					9			  */	  /*				    A			 */	     /*					  B				*/	    /*					  C			   */	    /*					 D			  */	  /*					E			 */		  /*				   F			*/
 			/*0*/	_i{ _o::BRK, AD_IMP, 7 }, { _o::ORA, AD_INX, 6 }, { _o::INV, AD_OTH, 2 }, { _o::INV, AD_INX, 8 }, { _o::INV, AD_ZPG, 3 }, { _o::ORA, AD_ZPG, 3 }, { _o::ASL, AD_ZPG, 5 }, { _o::INV, AD_ZPG, 5 }, { _o::PHP, AD_IMP, 3 }, { _o::ORA, AD_IMM, 2 }, { _o::ASL, AD_ACC, 2 }, { _o::INV, AD_IMM, 2 }, { _o::INV, AD_ABS, 4 }, { _o::ORA, AD_ABS, 4 }, { _o::ASL, AD_ABS, 6 }, { _o::INV, AD_ABS, 6 },
 			/*1*/	_i{ _o::BPL, AD_REL, 2 }, { _o::ORA, AD_INY, 5 }, { _o::INV, AD_OTH, 2 }, { _o::INV, AD_INY, 8 }, { _o::INV, AD_ZPX, 4 }, { _o::ORA, AD_ZPX, 4 }, { _o::ASL, AD_ZPX, 6 }, { _o::INV, AD_ZPX, 6 }, { _o::CLC ,AD_IMP, 2 }, { _o::ORA, AD_ABY, 4 }, { _o::INV, AD_IMP, 2 }, { _o::INV, AD_ABY, 7 }, { _o::INV, AD_ABX, 4 }, { _o::ORA, AD_ABX, 4 }, { _o::ASL, AD_ABX, 7 }, { _o::INV, AD_ABX, 7 },
 			/*2*/	_i{ _o::JSR, AD_ABS, 6 }, { _o::AND, AD_INX, 6 }, { _o::INV, AD_OTH, 2 }, { _o::INV, AD_INX, 8 }, { _o::BIT, AD_ZPG, 3 }, { _o::AND, AD_ZPG, 3 }, { _o::ROL, AD_ZPG, 5 }, { _o::INV, AD_ZPG, 5 }, { _o::PLP, AD_IMP, 4 }, { _o::AND, AD_IMM, 2 }, { _o::ROL, AD_ACC, 2 }, { _o::INV, AD_IMM, 2 }, { _o::BIT, AD_ABS, 4 }, { _o::AND, AD_ABS, 4 }, { _o::ROL, AD_ABS, 6 }, { _o::INV, AD_ABS, 6 },
@@ -270,282 +272,282 @@ namespace NesEm
 			//[[maybe_unused]] Instruction const& instruction, [[maybe_unused]] uint16_t address
 		FORCE_INLINE static bool ADC() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool AND() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool ASL() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool BCC() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool BCS() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool BEQ() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool BIT() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool BMI() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool BNE() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool BPL() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool BRK() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool BVC() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool BVS() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool CLC() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool CLD() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool CLI() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool CLV() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool CMP() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool CPX() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool CPY() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool DEC() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool DEX() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool DEY() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool EOR() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool INC() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool INX() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool INY() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool JMP() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool JSR() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool LDA() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool LDX() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool LDY() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool LSR() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool NOP() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool ORA() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool PHA() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool PHP() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool PLA() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool PLP() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool ROL() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool ROR() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool RTI() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool RTS() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool SBC() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool SEC() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool SED() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool SEI() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool STA() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool STX() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool STY() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool TAX() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool TAY() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool TSX() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool TXA() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool TXS() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		FORCE_INLINE static bool TYA() noexcept
 		{
-			return true;
+			return false;
 		}
 
 		// Invalid opcode
