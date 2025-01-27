@@ -7,7 +7,9 @@
 
 #include <thread>
 
-int main()
+#include <SDL3/SDL_main.h>
+
+int main(int argc, char* argv[])
 {
 	using namespace NesEm;
 
@@ -33,7 +35,6 @@ int main()
 
 	// Initialize the NES emulator
 	Emulator emulator{ };
-
 
 	// toggle displaying fps in console window
 	constexpr bool displayFPS{ true };
@@ -71,8 +72,9 @@ int main()
 			//Fixed Update if necessary
 			time.ProcessLag();
 		}
+
 		//Update
-		//Cpu emulation, ...
+		emulator.Run();
 
 		//Render
 		renderer.Render();
@@ -90,7 +92,7 @@ int main()
 			{
 				SDL_Log("FPS: %.1f", static_cast<float>(fpsCount) / fpsTimer);
 				fpsCount = 0;
-				fpsTimer -= 1.f;
+				fpsTimer = 0.f;
 			}
 		}
 

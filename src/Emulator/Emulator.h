@@ -11,6 +11,8 @@ namespace NesEm
 		Emulator() = default;
 		~Emulator() = default;
 
+		void Run() noexcept;
+
 		Emulator(Emulator const&) = delete;
 		Emulator(Emulator&&) = delete;
 		Emulator& operator=(Emulator const&) = delete;

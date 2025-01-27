@@ -22,6 +22,8 @@ namespace NesEm
 		CPU() = default;
 		~CPU() = default;
 
+		void Clock() noexcept;
+
 		CPU(CPU const&) = delete;
 		CPU(CPU&&) = delete;
 		CPU& operator=(CPU const&) = delete;
@@ -64,8 +66,6 @@ namespace NesEm
 		// Stack
 		void Push(uint8_t value) noexcept;
 		[[nodiscard]] inline uint8_t Pop() noexcept;
-
-		void Clock() noexcept;
 
 		// Runs "Async" and can interupt the CPU at any point in time (will finish the current instruction 1st)
 		void Reset() noexcept;

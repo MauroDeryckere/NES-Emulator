@@ -32,8 +32,15 @@ endif()
 
 # Sources
 add_subdirectory(src EXCLUDE_FROM_ALL)
-# Create main executable and link to sources
-add_executable(${EXECUTABLE_NAME} ${SOURCES})
+
+# Check if we are on Windows
+if(WIN32)
+    # On Windows, treat the project as a GUI application (no console)
+    add_executable(${EXECUTABLE_NAME} WIN32 ${SOURCES})
+else()
+    # For non-Windows platforms, create a normal console application
+    add_executable(${EXECUTABLE_NAME} ${SOURCES})
+endif()
 
 # Dependencies
 add_subdirectory(3rdParty EXCLUDE_FROM_ALL)
