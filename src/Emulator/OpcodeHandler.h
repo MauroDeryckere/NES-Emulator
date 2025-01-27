@@ -7,16 +7,19 @@
 		#define NES_EM_INIT_STRING_REPRESENTATION 1
 	#endif
 
+// Compiler specific force inline
 // For MSVC
 #if defined(_MSC_VER)
-#define FORCE_INLINE __forceinline
+	#define FORCE_INLINE __forceinline
 // For GCC and Clang
 #elif defined(__GNUC__) || defined(__clang__)
-#define FORCE_INLINE __attribute__((always_inline))
+	#define FORCE_INLINE __attribute__((always_inline))
 #else
-#define FORCE_INLINE inline
+	#define FORCE_INLINE inline
 #endif
 
+
+// Includes
 #include <cstdint>
 #include <array>
 
@@ -253,288 +256,288 @@ namespace NesEm
 		// Param Instruction: the specific instruction (since e.g ADC can be called via different address modes)
 		// Param Address: The address the opcode acts on if necessary
 			//[[maybe_unused]] Instruction const& instruction, [[maybe_unused]] uint16_t address
-		inline static bool ADC() noexcept
+		FORCE_INLINE static bool ADC() noexcept
 		{
 			return true;
 		}
 
-		inline static bool AND() noexcept
+		FORCE_INLINE static bool AND() noexcept
 		{
 			return true;
 		}
 
-		inline static bool ASL() noexcept
+		FORCE_INLINE static bool ASL() noexcept
 		{
 			return true;
 		}
 
-		inline static bool BCC() noexcept
+		FORCE_INLINE static bool BCC() noexcept
 		{
 			return true;
 		}
 
-		inline static bool BCS() noexcept
+		FORCE_INLINE static bool BCS() noexcept
 		{
 			return true;
 		}
 
-		inline static bool BEQ() noexcept
+		FORCE_INLINE static bool BEQ() noexcept
 		{
 			return true;
 		}
 
-		inline static bool BIT() noexcept
+		FORCE_INLINE static bool BIT() noexcept
 		{
 			return true;
 		}
 
-		inline static bool BMI() noexcept
+		FORCE_INLINE static bool BMI() noexcept
 		{
 			return true;
 		}
 
-		inline static bool BNE() noexcept
+		FORCE_INLINE static bool BNE() noexcept
 		{
 			return true;
 		}
 
-		FORCE_INLINE inline static bool BPL() noexcept
+		FORCE_INLINE static bool BPL() noexcept
 		{
 			return true;
 		}
 
-		inline static bool BRK() noexcept
+		FORCE_INLINE static bool BRK() noexcept
 		{
 			return true;
 		}
 
-		inline static bool BVC() noexcept
+		FORCE_INLINE static bool BVC() noexcept
 		{
 			return true;
 		}
 
-		inline static bool BVS() noexcept
+		FORCE_INLINE static bool BVS() noexcept
 		{
 			return true;
 		}
 
-		inline static bool CLC() noexcept
+		FORCE_INLINE static bool CLC() noexcept
 		{
 			return true;
 		}
 
-		inline static bool CLD() noexcept
+		FORCE_INLINE static bool CLD() noexcept
 		{
 			return true;
 		}
 
-		inline static bool CLI() noexcept
+		FORCE_INLINE static bool CLI() noexcept
 		{
 			return true;
 		}
 
-		inline static bool CLV() noexcept
+		FORCE_INLINE static bool CLV() noexcept
 		{
 			return true;
 		}
 
-		inline static bool CMP() noexcept
+		FORCE_INLINE static bool CMP() noexcept
 		{
 			return true;
 		}
 
-		inline static bool CPX() noexcept
+		FORCE_INLINE static bool CPX() noexcept
 		{
 			return true;
 		}
 
-		inline static bool CPY() noexcept
+		FORCE_INLINE static bool CPY() noexcept
 		{
 			return true;
 		}
 
-		inline static bool DEC() noexcept
+		FORCE_INLINE static bool DEC() noexcept
 		{
 			return true;
 		}
 
-		inline static bool DEX() noexcept
+		FORCE_INLINE static bool DEX() noexcept
 		{
 			return true;
 		}
 
-		inline static bool DEY() noexcept
+		FORCE_INLINE static bool DEY() noexcept
 		{
 			return true;
 		}
 
-		inline static bool EOR() noexcept
+		FORCE_INLINE static bool EOR() noexcept
 		{
 			return true;
 		}
 
-		inline static bool INC() noexcept
+		FORCE_INLINE static bool INC() noexcept
 		{
 			return true;
 		}
 
-		inline static bool INX() noexcept
+		FORCE_INLINE static bool INX() noexcept
 		{
 			return true;
 		}
 
-		inline static bool INY() noexcept
+		FORCE_INLINE static bool INY() noexcept
 		{
 			return true;
 		}
 
-		inline static bool JMP() noexcept
+		FORCE_INLINE static bool JMP() noexcept
 		{
 			return true;
 		}
 
-		inline static bool JSR() noexcept
+		FORCE_INLINE static bool JSR() noexcept
 		{
 			return true;
 		}
 
-		inline static bool LDA() noexcept
+		FORCE_INLINE static bool LDA() noexcept
 		{
 			return true;
 		}
 
-		inline static bool LDX() noexcept
+		FORCE_INLINE static bool LDX() noexcept
 		{
 			return true;
 		}
 
-		inline static bool LDY() noexcept
+		FORCE_INLINE static bool LDY() noexcept
 		{
 			return true;
 		}
 
-		inline static bool LSR() noexcept
+		FORCE_INLINE static bool LSR() noexcept
 		{
 			return true;
 		}
 
-		inline static bool NOP() noexcept
+		FORCE_INLINE static bool NOP() noexcept
 		{
 			return true;
 		}
 
-		inline static bool ORA() noexcept
+		FORCE_INLINE static bool ORA() noexcept
 		{
 			return true;
 		}
 
-		inline static bool PHA() noexcept
+		FORCE_INLINE static bool PHA() noexcept
 		{
 			return true;
 		}
 
-		inline static bool PHP() noexcept
+		FORCE_INLINE static bool PHP() noexcept
 		{
 			return true;
 		}
 
-		inline static bool PLA() noexcept
+		FORCE_INLINE static bool PLA() noexcept
 		{
 			return true;
 		}
 
-		inline static bool PLP() noexcept
+		FORCE_INLINE static bool PLP() noexcept
 		{
 			return true;
 		}
 
-		inline static bool ROL() noexcept
+		FORCE_INLINE static bool ROL() noexcept
 		{
 			return true;
 		}
 
-		inline static bool ROR() noexcept
+		FORCE_INLINE static bool ROR() noexcept
 		{
 			return true;
 		}
 
-		inline static bool RTI() noexcept
+		FORCE_INLINE static bool RTI() noexcept
 		{
 			return true;
 		}
 
-		inline static bool RTS() noexcept
+		FORCE_INLINE static bool RTS() noexcept
 		{
 			return true;
 		}
 
-		inline static bool SBC() noexcept
+		FORCE_INLINE static bool SBC() noexcept
 		{
 			return true;
 		}
 
-		inline static bool SEC() noexcept
+		FORCE_INLINE static bool SEC() noexcept
 		{
 			return true;
 		}
 
-		inline static bool SED() noexcept
+		FORCE_INLINE static bool SED() noexcept
 		{
 			return true;
 		}
 
-		inline static bool SEI() noexcept
+		FORCE_INLINE static bool SEI() noexcept
 		{
 			return true;
 		}
 
-		inline static bool STA() noexcept
+		FORCE_INLINE static bool STA() noexcept
 		{
 			return true;
 		}
 
-		inline static bool STX() noexcept
+		FORCE_INLINE static bool STX() noexcept
 		{
 			return true;
 		}
 
-		inline static bool STY() noexcept
+		FORCE_INLINE static bool STY() noexcept
 		{
 			return true;
 		}
 
-		inline static bool TAX() noexcept
+		FORCE_INLINE static bool TAX() noexcept
 		{
 			return true;
 		}
 
-		inline static bool TAY() noexcept
+		FORCE_INLINE static bool TAY() noexcept
 		{
 			return true;
 		}
 
-		inline static bool TSX() noexcept
+		FORCE_INLINE static bool TSX() noexcept
 		{
 			return true;
 		}
 
-		inline static bool TXA() noexcept
+		FORCE_INLINE static bool TXA() noexcept
 		{
 			return true;
 		}
 
-		inline static bool TXS() noexcept
+		FORCE_INLINE static bool TXS() noexcept
 		{
 			return true;
 		}
 
-		inline static bool TYA() noexcept
+		FORCE_INLINE static bool TYA() noexcept
 		{
 			return true;
 		}
 
 		// Invalid opcode
-		inline static bool INV() noexcept
+		FORCE_INLINE static bool INV() noexcept
 		{
 			return true;
 		}
