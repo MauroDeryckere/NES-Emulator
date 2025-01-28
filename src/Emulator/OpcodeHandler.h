@@ -174,8 +174,10 @@ namespace NesEm
 
 #pragma region OpcodesTables
 		// 16x16 Array to represent all possible instructions read from the ROM
-		// $00 -> $FF (0x00 -> 0xFF) 
-		// Table with all opcodes for reference: 
+		// $00 -> $FF (0x00 -> 0xFF)
+		// The table does include illegal opcodes but the opcodes will not do anything and just call the invalid opcode function
+		// Cycles and address modes are accurate though, so the system can be expanded to work with illegal opcodes if necessary.
+		// Table with all opcodes for reference:
 		// https://www.masswerk.at/6502/6502_instruction_set.html
 		NES_EM_TABLE std::array<Instruction, 256> OPCODES_6502
 		{	           /*			         0			  */	  /*		            1		     */		 /*					   2			*/	    /*					  3			   */      /*					 4			  */	  /*					5			 */	     /*					   6		     */		 /*					  7				*/		/*					 8			  */	   /*					9			  */	  /*				    A			 */	     /*					  B				*/	    /*					  C			   */	    /*					 D			  */	  /*					E			 */		  /*				   F			*/
@@ -190,11 +192,11 @@ namespace NesEm
 			/*8*/	_i{ _o::INV, AD_IMM, 2 }, { _o::STA, AD_INX, 6 }, { _o::INV, AD_IMM, 2 }, { _o::INV, AD_INX, 6 }, { _o::STY, AD_ZPG, 3 }, { _o::STA, AD_ZPG, 3 }, { _o::STX, AD_ZPG, 3 }, { _o::INV, AD_ZPG, 3 }, { _o::DEY, AD_IMP, 2 }, { _o::INV, AD_IMM, 2 }, { _o::TXA, AD_IMP, 2 }, { _o::INV, AD_IMM, 2 }, { _o::STY, AD_ABS, 4 }, { _o::STA, AD_ABS, 4 }, { _o::STX, AD_ABS, 4 }, { _o::INV, AD_ABS, 4 },
 			/*9*/	_i{ _o::BCC, AD_REL, 2 }, { _o::STA, AD_INY, 6 }, { _o::INV, AD_OTH, 2 }, { _o::INV, AD_INY, 6 }, { _o::STY, AD_ZPX, 4 }, { _o::STA, AD_ZPX, 4 }, { _o::STX, AD_ZPY, 4 }, { _o::INV, AD_ZPY, 4 }, { _o::TYA, AD_IMP, 2 }, { _o::STA, AD_ABY, 5 }, { _o::TXS, AD_IMP, 2 }, { _o::INV, AD_ABY, 5 }, { _o::INV, AD_ABX, 5 }, { _o::STA, AD_ABX, 5 }, { _o::INV, AD_ABY, 5 }, { _o::INV, AD_ABY, 5 },
 			/*A*/	_i{ _o::LDY, AD_IMM, 2 }, { _o::LDA, AD_INX, 6 }, { _o::LDX, AD_IMM, 2 }, { _o::INV, AD_INX, 6 }, { _o::LDY, AD_ZPG, 3 }, { _o::LDA, AD_ZPG, 3 }, { _o::LDX, AD_ZPG, 3 }, { _o::INV, AD_ZPG, 3 }, { _o::TAY, AD_IMP, 2 }, { _o::LDA, AD_IMM, 2 }, { _o::TAX, AD_IMP, 2 }, { _o::INV, AD_IMM, 2 }, { _o::LDY, AD_ABS, 4 }, { _o::LDA, AD_ABS, 4 }, { _o::LDX, AD_ABS, 4 }, { _o::INV, AD_ABS, 4 },
-			/*B*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-			/*C*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-			/*D*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-			/*E*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-			/*F*/	_i{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+			/*B*/	_i{ _o::BCS, AD_REL, 2 }, { _o::LDA, AD_INY, 5 }, { _o::INV, AD_OTH, 2 }, { _o::INV, AD_INY, 5 }, { _o::LDY, AD_ZPX, 4 }, { _o::LDA, AD_ZPX, 4 }, { _o::LDX, AD_ZPY, 4 }, { _o::INV, AD_ZPY, 4 }, { _o::CLV, AD_IMP, 2 }, { _o::LDA, AD_ABY, 4 }, { _o::TSX, AD_IMP, 2 }, { _o::INV, AD_ABY, 4 }, { _o::LDY, AD_ABX, 4 }, { _o::LDA, AD_ABX, 4 }, { _o::LDX, AD_ABY, 4 }, { _o::INV, AD_ABY, 4 },
+			/*C*/	_i{ _o::CPY, AD_IMM, 2 }, { _o::CMP, AD_INX, 6 }, { _o::INV, AD_IMM, 2 }, { _o::INV, AD_INX, 8 }, { _o::CPY, AD_ZPG, 3 }, { _o::CMP, AD_ZPG, 3 }, { _o::DEC, AD_ZPG, 5 }, { _o::INV, AD_ZPG, 5 }, { _o::INY, AD_IMP, 2 }, { _o::CMP, AD_IMM, 2 }, { _o::DEX, AD_IMP, 2 }, { _o::INV, AD_IMM, 2 }, { _o::CPY, AD_ABS, 4 }, { _o::CMP, AD_ABS, 4 }, { _o::DEC, AD_ABS, 6 }, { _o::INV, AD_ABS, 6 },
+			/*D*/	_i{ _o::BNE, AD_REL, 2 }, { _o::CMP, AD_INY, 5 }, { _o::INV, AD_OTH, 2 }, { _o::INV, AD_INY, 8 }, { _o::INV, AD_ZPX, 4 }, { _o::CMP, AD_ZPX, 4 }, { _o::DEC, AD_ZPX, 6 }, { _o::INV, AD_ZPX, 6 }, { _o::CLD, AD_IMP, 2 }, { _o::CMP, AD_ABY, 4 }, { _o::INV, AD_IMP, 2 }, { _o::INV, AD_ABY, 7 }, { _o::INV, AD_ABX, 4 }, { _o::CMP, AD_ABX, 4 }, { _o::DEC, AD_ABX, 7 }, { _o::INV, AD_ABX, 7 },
+			/*E*/	_i{ _o::CPX, AD_IMM, 2 }, { _o::SBC, AD_INX, 6 }, { _o::INV, AD_IMM, 2 }, { _o::INV, AD_INX, 8 }, { _o::CPX, AD_ZPG, 3 }, { _o::SBC, AD_ZPG, 3 }, { _o::INC, AD_ZPG, 5 }, { _o::INV, AD_ZPG, 5 }, { _o::INX, AD_IMP, 2 }, { _o::SBC, AD_IMM, 2 }, { _o::NOP, AD_IMP, 2 }, { _o::INV, AD_IMM, 2 }, { _o::CPX, AD_ABS, 4 }, { _o::SBC, AD_ABS, 4 }, { _o::INC, AD_ABS, 6 }, { _o::INV, AD_ABS, 6 },
+			/*F*/	_i{ _o::BEQ, AD_REL, 2 }, { _o::SBC, AD_INY, 5 }, { _o::INV, AD_OTH, 2 }, { _o::INV, AD_INY, 8 }, { _o::INV, AD_ZPX, 4 }, { _o::SBC, AD_ZPX, 4 }, { _o::INC, AD_ZPX, 6 }, { _o::INV, AD_ZPX, 6 }, { _o::SED, AD_IMP, 2 }, { _o::SBC, AD_ABY, 4 }, { _o::INV, AD_IMP, 2 }, { _o::INV, AD_ABY, 7 }, { _o::INV, AD_ABX, 4 }, { _o::SBC, AD_ABX, 4 }, { _o::INC, AD_ABX, 7 }, { _o::INV, AD_ABX, 7 },
 		};
 
 	#ifdef NES_EM_INIT_STRING_REPRESENTATION
