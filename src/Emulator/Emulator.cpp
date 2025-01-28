@@ -5,6 +5,6 @@ namespace NesEm
 	void Emulator::Run() noexcept
 	{
 		// Run the CPU
-		m_Cpu.Clock();
+		//m_Cpu.Clock();
 	}
 }

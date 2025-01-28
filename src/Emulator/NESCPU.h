@@ -4,7 +4,6 @@
 #include <cstdint>
 
 #include "NESMemory.h"
-
 #include "OpcodeHandler.h"
 
 /* Various sources used during development of the CPU of our emulator: 
@@ -33,8 +32,9 @@ namespace NesEm
 		// Opcode handler should be friended since we do need access to some private variables
 		// Like editing registers, ...
 		friend class OpcodeHandler;
-		OpcodeHandler m_OpcodeHandler{  };
-		NESMemory m_Memory{  };
+
+		OpcodeHandler m_OpcodeHandler{ };
+		NESMemory m_Memory{ };
 
 		uint8_t m_Accumulator{ 0 };
 		uint8_t m_XRegister{ 0 };
@@ -60,12 +60,30 @@ namespace NesEm
 		};
 		// Functions to adjust status flags TODO
 
-		// Memory
-		[[nodiscard]] inline uint8_t Fetch() noexcept;
+#pragma region Memory
+		// Read memory at program counter and increase the program counter
+		[[nodiscard]] FORCE_INLINE uint8_t Read() noexcept
+		{
+			return m_Memory.Read(m_ProgramCounter++);
+		}
+		// Read memory at a specific address
+		[[nodiscard]] FORCE_INLINE uint8_t Read(uint16_t address) noexcept
+		{
+			return m_Memory.Read(address);
+		}
 
-		// Stack
+		[[nodiscard]] FORCE_INLINE uint8_t Fetch() noexcept
+		{
+			//TODO
+			return 0;
+		}
+
+#pragma region Stack
 		void Push(uint8_t value) noexcept;
 		[[nodiscard]] inline uint8_t Pop() noexcept;
+#pragma endregion
+
+#pragma endregion
 
 		// Runs "Async" and can interupt the CPU at any point in time (will finish the current instruction 1st)
 		void Reset() noexcept;

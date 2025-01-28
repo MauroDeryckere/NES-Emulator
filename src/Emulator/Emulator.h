@@ -1,7 +1,7 @@
 #ifndef NES_EMULATOR
 #define NES_EMULATOR
 
-#include "CPU.h"
+#include "NESCPU.h"
 
 namespace NesEm
 {
@@ -18,7 +18,7 @@ namespace NesEm
 		Emulator& operator=(Emulator const&) = delete;
 		Emulator& operator=(Emulator&&) = delete;
 	private:
-		CPU m_Cpu{};
+		CPU m_Cpu{  };
 	};
 }
 

@@ -3,7 +3,7 @@
 
 
 // Configuration
-#define NES_EM_USE_STATIC_CONSTEXR_TABLE 1
+#define NES_EM_USE_STATIC_CONSTEXPR_TABLE 1
 #define NES_EM_DEBUG_MODE 1
 
 // Defines required when in debug or other config modes
@@ -24,7 +24,7 @@
 #endif
 
 // Allow swapping between static and non static tables
-#if NES_EM_USE_STATIC_CONSTEXR_TABLE
+#if NES_EM_USE_STATIC_CONSTEXPR_TABLE
 	#define NES_EM_TABLE static constexpr
 #else
 	#define NES_EM_TABLE const
@@ -47,95 +47,121 @@ namespace NesEm
 		constexpr OpcodeHandler() = default;
 		~OpcodeHandler() = default;
 
-		OpcodeHandler(OpcodeHandler const&) = delete;
-		OpcodeHandler(OpcodeHandler&&) = delete;
-		OpcodeHandler& operator=(OpcodeHandler const&) = delete;
-		OpcodeHandler& operator=(OpcodeHandler&&) = delete;
+		constexpr OpcodeHandler(OpcodeHandler const&) = default;
+		constexpr OpcodeHandler(OpcodeHandler&&) = default;
+		constexpr OpcodeHandler& operator=(OpcodeHandler const&) = default;
+		constexpr OpcodeHandler& operator=(OpcodeHandler&&) = default;
 
-		//TODO: Interface interactions with opcodes
-		//bool ExecuteOpcode(CPU& cpu, uint8_t opcode, uint16_t address)	
-		//HandleAddressMode(uint8_t opcode)
-
+		// Return uint8_t; How many cycles opcode takes
+		// Param uint8_t; The opcode we're executing
+		// Param (in & out) CPU; The CPU the opcodes is executed on
+		[[nodiscard]] uint8_t ExecuteOpcode(uint8_t opcode, CPU& cpu) const noexcept;
+		
 	private:
 #pragma region AddressingModes
+		// Info writen here is from
+		// https://www.masswerk.at/6502/6502_instruction_set.html
+		// Section: Address Modes
 		enum class AddressingMode : uint8_t
 		{
-			Accumulator, // Acts directly on accumulator
-			Absolute, // Loads from absolute address
-			AbsoluteX, // Absolute, X -> offset absolute address by X reg
-			AbsoluteY, // Absolute, Y -> offset absolute address by Y reg
-			Immediate, // Loads content itself instead of content from an address
-			Implied,
-			Indirect,  // 16 bit address is read to	get the actual 16 bit address (== pointer)
-			IndirectX, // (Indirect, X) -> First uses ZeroPageX, so offset the zero page access by X, then takes the value found in memory on that location and uses this as an absolute access mode
-			IndirectY, // (Indirect), Y -> Takes the "Indirect" zeropage value, then takes the value located there and uses it as an address, after that it adds Y to this absolute address, and then loads the value found at this address
-			Relative, // Branching instructions	- branches to place relative on program counter based on current place
-			ZeroPage, // First 256 bytes in memory for faster access
-			ZeroPageX, // Works as ZeroPage but before getting contents, add value from X reg to the address (offset address by X reg)
-			ZeroPageY, // Works as ZeroPage but before getting contents, add value from Y reg to the address (offset address by Y reg)
-			Other // Other opcodes (only used for specific invalid opcodes)
+			Accumulator, // OPC A			operand is AC (implied single byte instruction)
+			Absolute,	 // OPC $LLHH		operand is address $HHLL (1)
+			AbsoluteX,	 // OPC $LLHH,X	    operand is address; effective address is address incremented by X with carry (2)
+			AbsoluteY,	 // OPC $LLHH,Y		operand is address; effective address is address incremented by Y with carry (2)
+			Immediate,	 // OPC #$BB		operand is byte BB
+			Implied,	 // OPC				operand implied
+			Indirect,	 // OPC ($LLHH)		operand is address; effective address is contents of word at address: C.w($HHLL)
+			IndirectX,	 // OPC ($LL,X)		operand is zeropage address; effective address is word in (LL + X, LL + X + 1), inc. without carry: C.w($00LL + X)
+			IndirectY,	 // OPC ($LL),Y		operand is zeropage address; effective address is word in (LL, LL + 1) incremented by Y with carry: C.w($00LL) + Y
+			Relative,	 // OPC $BB			branch target is PC + signed offset BB (3)
+			ZeroPage,	 // OPC $LL			operand is zeropage address (hi-byte is zero, address = $00LL)
+			ZeroPageX,	 // OPC $LL,X		operand is zeropage address; effective address is address incremented by X without carry (2)
+			ZeroPageY,	 // OPC $LL,Y		operand is zeropage address; effective address is address incremented by Y without carry (2)
+			Other		 // Specific to invalid opcodes
 		};
+		// (1)
+		/* 16-bit address words are little endian, lo(w)-byte first, followed by the hi(gh)-byte.
+		   (An assembler will use a human readable, big-endian notation as in $HHLL.)
+		*/
+		// (2)
+		/*	The available 16 - bit address space is conceived as consisting of pages of 256 bytes each, with
+			address hi - bytes represententing the page index.An increment with carry may affect the hi - byte
+			and may thus result in a crossing of page boundaries, adding an extra cycle to the execution.
+			Increments without carry do not affect the hi - byte of an address and no page transitions do occur.
+			Generally, increments of 16 - bit addresses include a carry, increments of zeropage addresses don't.
+			Notably this is not related in any way to the state of the carry flag in the status register.
+		 */
+		// (3)
+		/*  Branch offsets are signed 8-bit values, -128 ... +127, negative offsets in two's complement.
+			Page transitions may occur and add an extra cycle to the exucution.
+		*/
+
+		// Return uint8_t; How many cycles the address mode took
+		// Param AddressingMode; The mode address mode the opcode is executed in
+		// Param CPU; The CPU the opcodes is executed on
+		// Param (in & out) uint16_t; The address, the address mode returns 
+		[[nodiscard]] uint8_t HandleAddressMode(AddressingMode mode, CPU& cpu, uint16_t& address) const noexcept;
 #pragma endregion
 #pragma region Opcodes
 		// Which opcode links to which ID in the function ptr table
 		enum class Opcodes : uint8_t {
-			ADC,
-			AND,
-			ASL,
-			BCC,
-			BCS,
-			BEQ,
-			BIT,
-			BMI,
-			BNE,
-			BPL,
-			BRK,
-			BVC,
-			BVS,
-			CLC,
-			CLD,
-			CLI,
-			CLV,
-			CMP,
-			CPX,
-			CPY,
-			DEC,
-			DEX,
-			DEY,
-			EOR,
-			INC,
-			INX,
-			INY,
-			JMP,
-			JSR,
-			LDA,
-			LDX,
-			LDY,
-			LSR,
-			NOP,
-			ORA,
-			PHA,
-			PHP,
-			PLA,
-			PLP,
-			ROL,
-			ROR,
-			RTI,
-			RTS,
-			SBC,
-			SEC,
-			SED,
-			SEI,
-			STA,
-			STX,
-			STY,
-			TAX,
-			TAY,
-			TSX,
-			TXA,
-			TXS,
-			TYA,
-			INV
+			ADC, 
+			AND, 
+			ASL, 
+			BCC, 
+			BCS, 
+			BEQ, 
+			BIT, 
+			BMI, 
+			BNE, 
+			BPL, 
+			BRK, 
+			BVC, 
+			BVS, 
+			CLC, 
+			CLD, 
+			CLI, 
+			CLV, 
+			CMP, 
+			CPX, 
+			CPY, 
+			DEC, 
+			DEX, 
+			DEY, 
+			EOR, 
+			INC, 
+			INX, 
+			INY, 
+			JMP, 
+			JSR, 
+			LDA, 
+			LDX, 
+			LDY, 
+			LSR, 
+			NOP, 
+			ORA, 
+			PHA, 
+			PHP, 
+			PLA, 
+			PLP, 
+			ROL, 
+			ROR, 
+			RTI, 
+			RTS, 
+			SBC, 
+			SEC, 
+			SED, 
+			SEI, 
+			STA, 
+			STX, 
+			STY, 
+			TAX, 
+			TAY, 
+			TSX, 
+			TXA, 
+			TXS, 
+			TYA, 
+			INV  
 		};
 #pragma endregion
 
@@ -267,299 +293,297 @@ namespace NesEm
 #pragma endregion
 
 #pragma region 6502OpcodeFunctions
-		// Functions return wether or not cycles may change
-		// when certain criteria are (not) met
-		// Param Instruction: the specific instruction (since e.g ADC can be called via different address modes)
-		// Param Address: The address the opcode acts on if necessary
-			//[[maybe_unused]] Instruction const& instruction, [[maybe_unused]] uint16_t address
-		FORCE_INLINE static bool ADC() noexcept
+		// Functions return wether or not cycles may change when certain criteria are (not) met
+		// Param CPU: The CPU the instruction acts on
+		// Param AddressingMode: The Addressing mode the instruction was executed in
+		FORCE_INLINE static bool ADC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+
+		FORCE_INLINE static bool AND(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool AND() noexcept
+		FORCE_INLINE static bool ASL(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool ASL() noexcept
+		FORCE_INLINE static bool BCC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool BCC() noexcept
+		FORCE_INLINE static bool BCS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool BCS() noexcept
+		FORCE_INLINE static bool BEQ(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool BEQ() noexcept
+		FORCE_INLINE static bool BIT(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool BIT() noexcept
+		FORCE_INLINE static bool BMI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool BMI() noexcept
+		FORCE_INLINE static bool BNE(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool BNE() noexcept
+		FORCE_INLINE static bool BPL(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool BPL() noexcept
+		FORCE_INLINE static bool BRK(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool BRK() noexcept
+		FORCE_INLINE static bool BVC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool BVC() noexcept
+		FORCE_INLINE static bool BVS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool BVS() noexcept
+		FORCE_INLINE static bool CLC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool CLC() noexcept
+		FORCE_INLINE static bool CLD(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool CLD() noexcept
+		FORCE_INLINE static bool CLI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool CLI() noexcept
+		FORCE_INLINE static bool CLV(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool CLV() noexcept
+		FORCE_INLINE static bool CMP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool CMP() noexcept
+		FORCE_INLINE static bool CPX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool CPX() noexcept
+		FORCE_INLINE static bool CPY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool CPY() noexcept
+		FORCE_INLINE static bool DEC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool DEC() noexcept
+		FORCE_INLINE static bool DEX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool DEX() noexcept
+		FORCE_INLINE static bool DEY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool DEY() noexcept
+		FORCE_INLINE static bool EOR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool EOR() noexcept
+		FORCE_INLINE static bool INC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool INC() noexcept
+		FORCE_INLINE static bool INX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool INX() noexcept
+		FORCE_INLINE static bool INY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool INY() noexcept
+		FORCE_INLINE static bool JMP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool JMP() noexcept
+		FORCE_INLINE static bool JSR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool JSR() noexcept
+		FORCE_INLINE static bool LDA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool LDA() noexcept
+		FORCE_INLINE static bool LDX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool LDX() noexcept
+		FORCE_INLINE static bool LDY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool LDY() noexcept
+		FORCE_INLINE static bool LSR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool LSR() noexcept
+		FORCE_INLINE static bool NOP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool NOP() noexcept
+		FORCE_INLINE static bool ORA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool ORA() noexcept
+		FORCE_INLINE static bool PHA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool PHA() noexcept
+		FORCE_INLINE static bool PHP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool PHP() noexcept
+		FORCE_INLINE static bool PLA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool PLA() noexcept
+		FORCE_INLINE static bool PLP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool PLP() noexcept
+		FORCE_INLINE static bool ROL(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool ROL() noexcept
+		FORCE_INLINE static bool ROR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool ROR() noexcept
+		FORCE_INLINE static bool RTI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool RTI() noexcept
+		FORCE_INLINE static bool RTS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool RTS() noexcept
+		FORCE_INLINE static bool SBC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool SBC() noexcept
+		FORCE_INLINE static bool SEC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool SEC() noexcept
+		FORCE_INLINE static bool SED(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool SED() noexcept
+		FORCE_INLINE static bool SEI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool SEI() noexcept
+		FORCE_INLINE static bool STA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool STA() noexcept
+		FORCE_INLINE static bool STX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool STX() noexcept
+		FORCE_INLINE static bool STY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool STY() noexcept
+		FORCE_INLINE static bool TAX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool TAX() noexcept
+		FORCE_INLINE static bool TAY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool TAY() noexcept
+		FORCE_INLINE static bool TSX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool TSX() noexcept
+		FORCE_INLINE static bool TXA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool TXA() noexcept
+		FORCE_INLINE static bool TXS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
-		FORCE_INLINE static bool TXS() noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool TYA() noexcept
+		FORCE_INLINE static bool TYA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return false;
 		}
 
 		// Invalid opcode
-		FORCE_INLINE static bool INV() noexcept
+		FORCE_INLINE static bool INV(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 		{
 			return true;
 		}
 #pragma endregion
+		//Opcode function ptr
+		// Cpu, address, addressing mode
+		using OpcodeFunction = bool (*)(CPU&, uint16_t, AddressingMode);
+
 		// Table of function pointers for each opcode
-		using OpcodeFunction = bool (*)();
 		NES_EM_TABLE std::array<OpcodeFunction, 57> OPCODES_6502_FUNCTIONS
 		{
 			ADC, // 0
