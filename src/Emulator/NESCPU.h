@@ -58,9 +58,10 @@ namespace NesEm
 			V = (1 << 6), // Overflow
 			N = (1 << 7)  // Negative
 		};
-		// Functions to adjust status flags TODO
-
 		// Convenience functions to access status register
+
+		// Param StatusFlags status flag we check
+		// Returns wether or not a specific status flag is set
 		[[nodiscard]] FORCE_INLINE bool IsFlagSet(StatusFlags flag) const noexcept
 		{
 			static_assert(std::is_unsigned_v<std::underlying_type_t<StatusFlags>>);
@@ -69,6 +70,10 @@ namespace NesEm
 
 			return (static_cast<std::underlying_type_t<StatusFlags>>(flag) & m_StatusRegister) != 0;
 		}
+
+		// Param StatusFlags status flag to set
+		// Param bool value, when true set the bit when false clear the bit
+		// Sets or clears (depending on the provided value) a specific status flag
 		FORCE_INLINE void SetFlag(StatusFlags flag, bool value) noexcept
 		{
 			static_assert(std::is_unsigned_v<std::underlying_type_t<StatusFlags>>);
