@@ -96,7 +96,7 @@ namespace NesEm
 			Page transitions may occur and add an extra cycle to the exucution.
 		*/
 
-		// Return uint8_t; How many cycles the address mode took
+		// Return uint8_t; How many addtional cycles the address mode could take
 		// Param AddressingMode; The mode address mode the opcode is executed in
 		// Param CPU; The CPU the opcodes is executed on
 		// Param (in & out) uint16_t; The address, the address mode returns 
@@ -296,288 +296,121 @@ namespace NesEm
 		// Functions return wether or not cycles may change when certain criteria are (not) met
 		// Param CPU: The CPU the instruction acts on
 		// Param AddressingMode: The Addressing mode the instruction was executed in
+
+		// Add Memory to Accumulator with Carry
 		FORCE_INLINE static bool ADC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
-
-		FORCE_INLINE static bool AND(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool ASL(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool BCC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool BCS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool BEQ(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool BIT(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool BMI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool BNE(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool BPL(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool BRK(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool BVC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool BVS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool CLC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool CLD(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool CLI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool CLV(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool CMP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool CPX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool CPY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool DEC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool DEX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool DEY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool EOR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool INC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool INX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool INY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool JMP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool JSR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool LDA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool LDX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool LDY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool LSR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool NOP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool ORA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool PHA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool PHP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool PLA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool PLP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool ROL(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool ROR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool RTI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool RTS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool SBC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool SEC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool SED(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool SEI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool STA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool STX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool STY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool TAX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool TAY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool TSX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool TXA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool TXS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
-		FORCE_INLINE static bool TYA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return false;
-		}
-
+		// AND Memory with Accumulator
+		FORCE_INLINE static bool AND(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Shift Left One Bit (Memory or Accumulator)
+		FORCE_INLINE static bool ASL(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Branch on Carry Clear
+		FORCE_INLINE static bool BCC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Branch on Carry Set
+		FORCE_INLINE static bool BCS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Branch on Result Zero
+		FORCE_INLINE static bool BEQ(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Test Bits in Memory with Accumulator
+		FORCE_INLINE static bool BIT(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Branch on Result Minus
+		FORCE_INLINE static bool BMI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Branch on Result not Zero
+		FORCE_INLINE static bool BNE(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Branch on Result Plus
+		FORCE_INLINE static bool BPL(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Force Break
+		FORCE_INLINE static bool BRK(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Branch on Overflow Clear
+		FORCE_INLINE static bool BVC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Branch on Overflow Set
+		FORCE_INLINE static bool BVS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Clear Carry Flag
+		FORCE_INLINE static bool CLC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Clear Decimal Mode
+		FORCE_INLINE static bool CLD(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Clear Interrupt Disable Bit
+		FORCE_INLINE static bool CLI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Clear Overflow Flag
+		FORCE_INLINE static bool CLV(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Compare Memory with Accumulator
+		FORCE_INLINE static bool CMP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Compare Memory and Index X
+		FORCE_INLINE static bool CPX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Compare Memory and Index Y
+		FORCE_INLINE static bool CPY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Decrement Memory by One
+		FORCE_INLINE static bool DEC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Decrement Index X by One
+		FORCE_INLINE static bool DEX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Decrement Index Y by One
+		FORCE_INLINE static bool DEY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Exclusive - OR Memory with Accumulator
+		FORCE_INLINE static bool EOR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Increment Memory by One
+		FORCE_INLINE static bool INC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Increment Index X by One
+		FORCE_INLINE static bool INX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Increment Index Y by One
+		FORCE_INLINE static bool INY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Jump to New Location
+		FORCE_INLINE static bool JMP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Jump to New Location Saving Return Address
+		FORCE_INLINE static bool JSR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Load Accumulator with Memory
+		FORCE_INLINE static bool LDA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Load Index X with Memory
+		FORCE_INLINE static bool LDX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Load Index Y with Memory
+		FORCE_INLINE static bool LDY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Shift One Bit Right(Memory or Accumulator)
+		FORCE_INLINE static bool LSR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// No Operation
+		FORCE_INLINE static bool NOP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// OR Memory with Accumulator
+		FORCE_INLINE static bool ORA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Push Accumulator on Stack
+		FORCE_INLINE static bool PHA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Push Processor Status on Stack
+		FORCE_INLINE static bool PHP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Pull Accumulator from Stack
+		FORCE_INLINE static bool PLA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Pull Processor Status from Stack
+		FORCE_INLINE static bool PLP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Rotate One Bit Left(Memory or Accumulator)
+		FORCE_INLINE static bool ROL(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Rotate One Bit Right(Memory or Accumulator)
+		FORCE_INLINE static bool ROR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Return from Interrupt
+		FORCE_INLINE static bool RTI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Return from Subroutine
+		FORCE_INLINE static bool RTS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Subtract Memory from Accumulator with Borrow
+		FORCE_INLINE static bool SBC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Set Carry Flag
+		FORCE_INLINE static bool SEC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Set Decimal Flag
+		FORCE_INLINE static bool SED(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Set Interrupt Disable Status
+		FORCE_INLINE static bool SEI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Store Accumulator in Memory
+		FORCE_INLINE static bool STA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Store Index X in Memory
+		FORCE_INLINE static bool STX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Store Index Y in Memory
+		FORCE_INLINE static bool STY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Transfer Accumulator to Index X
+		FORCE_INLINE static bool TAX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Transfer Accumulator to Index Y
+		FORCE_INLINE static bool TAY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Transfer Stack Pointer to Index X
+		FORCE_INLINE static bool TSX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Transfer Index X to Accumulator
+		FORCE_INLINE static bool TXA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Transfer Index X to Stack Register
+		FORCE_INLINE static bool TXS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
+		// Transfer Index Y to Accumulator
+		FORCE_INLINE static bool TYA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
 		// Invalid opcode
-		FORCE_INLINE static bool INV(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
-		{
-			return true;
-		}
+		FORCE_INLINE static bool INV(CPU& cpu, uint16_t address, AddressingMode mode) noexcept;
 #pragma endregion
 		//Opcode function ptr
 		// Cpu, address, addressing mode

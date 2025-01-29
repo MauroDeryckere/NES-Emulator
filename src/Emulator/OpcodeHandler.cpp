@@ -277,8 +277,234 @@ namespace NesEm
         return std::numeric_limits<uint8_t>::max();
     }
 
+#pragma region OpcodeFunctions
 	FORCE_INLINE bool OpcodeHandler::ADC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
 	{
 		return false;
 	}
+	FORCE_INLINE bool OpcodeHandler::AND(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::ASL(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::BCC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::BCS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::BEQ(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::BIT(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::BMI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::BNE(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::BPL(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::BRK(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::BVC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::BVS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::CLC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::CLD(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::CLI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::CLV(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::CMP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::CPX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::CPY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::DEC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::DEX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::DEY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::EOR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::INC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::INX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::INY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::JMP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::JSR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::LDA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::LDX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::LDY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::LSR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::NOP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::ORA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::PHA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::PHP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::PLA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::PLP(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::ROL(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::ROR(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::RTI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::RTS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::SBC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::SEC(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::SED(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::SEI(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::STA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::STX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::STY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::TAX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::TAY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::TSX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::TXA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::TXS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::TYA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+	FORCE_INLINE bool OpcodeHandler::INV(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	{
+		return false;
+	}
+#pragma endregion
 }
