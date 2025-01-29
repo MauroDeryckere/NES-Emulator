@@ -60,6 +60,42 @@ namespace NesEm
 		};
 		// Functions to adjust status flags TODO
 
+		// Convenience functions to access status register
+		[[nodiscard]] FORCE_INLINE bool IsFlagSet(StatusFlags flag) const noexcept
+		{
+			static_assert(std::is_unsigned_v<std::underlying_type_t<StatusFlags>>);
+			static_assert(std::is_enum_v<StatusFlags>);
+			static_assert(std::is_same_v<std::underlying_type_t<StatusFlags>, decltype(m_StatusRegister)>);
+
+			return (static_cast<std::underlying_type_t<StatusFlags>>(flag) & m_StatusRegister) != 0;
+		}
+		FORCE_INLINE void SetFlag(StatusFlags flag, bool value) noexcept
+		{
+			static_assert(std::is_unsigned_v<std::underlying_type_t<StatusFlags>>);
+			static_assert(std::is_enum_v<StatusFlags>);
+			static_assert(std::is_same_v<std::underlying_type_t<StatusFlags>, decltype(m_StatusRegister)>);
+
+			if (value)
+			{
+				// 0 | 0 -> 0
+				// 0 | 1 -> 1
+				// 1 | 0 -> 1
+				// 1 | 1 -> 1
+				// E.g 0000 0000 |= 1000 0000 -> 1000 0000
+				m_StatusRegister |= static_cast<std::underlying_type_t<StatusFlags>>(flag);  // Set bit
+			}
+			else
+			{
+				// 0 & 0 -> 0 
+				// 0 & 1 -> 0 
+				// 1 & 0 -> 0 
+				// 1 & 1 -> 1 
+				// E.g 0000 0000 &= 1000 0000 -> 0000 0000	-->  0000 0000 &= (~1000 0000) -> 0000 0000 &= 0111 1111 -> 0000 0000
+				// E.g 1000 0000 &= 1000 0000 -> 1000 0000	-->  1000 0000 &= (~1000 0000) -> 1000 0000 &= 0111 1111 -> 0000 0000
+				m_StatusRegister &= ~static_cast<std::underlying_type_t<StatusFlags>>(flag); // Clear bit
+			}
+		}
+
 #pragma region Memory
 		// Read memory at program counter and increase the program counter
 		[[nodiscard]] FORCE_INLINE uint8_t Read() noexcept

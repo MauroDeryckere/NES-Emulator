@@ -2,6 +2,8 @@
 
 #include "NESCPU.h"
 
+#include "SDL3/SDL_log.h"
+
 #include <iostream>
 #include <limits>
 
@@ -29,6 +31,7 @@ namespace NesEm
 
         return cycles;
     }
+
 	uint8_t OpcodeHandler::HandleAddressMode(AddressingMode mode, CPU& cpu, uint16_t& address) const noexcept
     {
 		// More information for each address mode in more detail can be found at
@@ -498,12 +501,26 @@ namespace NesEm
 	{
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::TYA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	FORCE_INLINE bool OpcodeHandler::TYA(CPU& cpu, uint16_t, AddressingMode) noexcept
 	{
+		// Y -> A
+		cpu.m_Accumulator = cpu.m_YRegister;
+
+		//Flags: 
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator)); // check if accumulator is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::INV(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	FORCE_INLINE bool OpcodeHandler::INV(CPU&, uint16_t, AddressingMode) noexcept
 	{
+		//We don't do anything with illegal opcodes at the moment.
+		#if NES_EM_DEBUG_MODE
+			SDL_Log("%s", "Invalid opcode executed.");
+		#endif
+
 		return false;
 	}
 #pragma endregion
