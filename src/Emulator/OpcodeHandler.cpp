@@ -334,22 +334,67 @@ namespace NesEm
 	{
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::CLC(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::CLC(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Set flag instructions only allows implied address modes");
+
+		// 0 -> C
+
+		//Flags:
+		// N Z C I D V
+		// - - 0 - - -
+
+		cpu.ClearFlag(CPU::StatusFlags::C);
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::CLD(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::CLD(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Set flag instructions only allows implied address modes");
+
+		// 0 -> D
+
+		//Flags:
+		// N Z C I D V
+		// - - - - 0 -
+
+		cpu.ClearFlag(CPU::StatusFlags::D);
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::CLI(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::CLI(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Set flag instructions only allows implied address modes");
+
+		// 0 -> I
+
+		//Flags:
+		// N Z C I D V
+		// - - - 0 - -
+
+		cpu.ClearFlag(CPU::StatusFlags::I);
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::CLV(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::CLV(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Set flag instructions only allows implied address modes");
+
+		// 0 -> V
+
+		//Flags:
+		// N Z C I D V
+		// - - - - - 0
+
+		cpu.ClearFlag(CPU::StatusFlags::V);
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::CMP(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		return false;
