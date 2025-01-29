@@ -458,18 +458,51 @@ namespace NesEm
 	{
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::SEC(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Set flag instructions only allows implied address modes");
+
+		// 1 -> C
+
+		//Flags:
+		// N Z C I D V
+		// - - 1 - - -
+
+		cpu.SetFlag(CPU::StatusFlags::C);
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::SED(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Set flag instructions only allows implied address modes");
+
+		// 1 -> D
+
+		//Flags:
+		// N Z C I D V
+		// - - - - 1 -
+
+		cpu.SetFlag(CPU::StatusFlags::D);
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::SEI(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+	FORCE_INLINE bool OpcodeHandler::SEI(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Set flag instructions only allows implied address modes");
+
+		// 1 -> I
+
+		//Flags:
+		// N Z C I D V
+		// - - - 1 - -
+
+		cpu.SetFlag(CPU::StatusFlags::I);
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::STA(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		assert(mode == AddressingMode::ZeroPage
@@ -489,6 +522,7 @@ namespace NesEm
 
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::STX(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		assert(mode == AddressingMode::ZeroPage 
@@ -504,6 +538,7 @@ namespace NesEm
 
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::STY(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		assert(mode == AddressingMode::ZeroPage
@@ -519,6 +554,7 @@ namespace NesEm
 
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::TAX(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		assert(mode == AddressingMode::Implied && "Transfer opcodes only allow implied address modes");

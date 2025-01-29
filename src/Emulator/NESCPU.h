@@ -101,6 +101,22 @@ namespace NesEm
 			}
 		}
 
+		// Param StatusFlags status flag to set
+		// Set a specific status flag
+		FORCE_INLINE void SetFlag(StatusFlags flag) noexcept
+		{
+			static_assert(std::is_unsigned_v<std::underlying_type_t<StatusFlags>>);
+			static_assert(std::is_enum_v<StatusFlags>);
+			static_assert(std::is_same_v<std::underlying_type_t<StatusFlags>, decltype(m_StatusRegister)>);
+
+			// 0 | 0 -> 0
+			// 0 | 1 -> 1
+			// 1 | 0 -> 1
+			// 1 | 1 -> 1
+			// E.g 0000 0000 |= 1000 0000 -> 1000 0000
+			m_StatusRegister |= static_cast<std::underlying_type_t<StatusFlags>>(flag);  // Set bit
+		}
+
 #pragma region Memory
 		// Read memory at program counter and increase the program counter
 		[[nodiscard]] FORCE_INLINE uint8_t Read() const noexcept
