@@ -337,7 +337,7 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::CLC(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
-		assert(mode == AddressingMode::Implied && "Set flag instructions only allows implied address modes");
+		assert(mode == AddressingMode::Implied && "Clear flag instructions only allows implied address modes");
 
 		// 0 -> C
 
@@ -352,7 +352,7 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::CLD(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
-		assert(mode == AddressingMode::Implied && "Set flag instructions only allows implied address modes");
+		assert(mode == AddressingMode::Implied && "Clear flag instructions only allows implied address modes");
 
 		// 0 -> D
 
@@ -367,7 +367,7 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::CLI(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
-		assert(mode == AddressingMode::Implied && "Set flag instructions only allows implied address modes");
+		assert(mode == AddressingMode::Implied && "Clear flag instructions only allows implied address modes");
 
 		// 0 -> I
 
@@ -382,7 +382,7 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::CLV(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
-		assert(mode == AddressingMode::Implied && "Set flag instructions only allows implied address modes");
+		assert(mode == AddressingMode::Implied && "Clear flag instructions only allows implied address modes");
 
 		// 0 -> V
 
@@ -443,26 +443,86 @@ namespace NesEm
 	{
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::LDA(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
-		return false;
+		assert(mode == AddressingMode::Immediate
+			|| mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageX
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteX
+			|| mode == AddressingMode::AbsoluteY
+			|| mode == AddressingMode::IndirectX
+			|| mode == AddressingMode::IndirectY && "unsupported address mode for LDA instruction");
+
+		// M -> A
+		cpu.m_Accumulator = cpu.Read(address);
+
+		//Flags: 
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator)); // check if accumulator is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
+		// LDA instruction possibly takes an extra cycle 
+		return true;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::LDX(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
-		return false;
+		assert(mode == AddressingMode::Immediate
+			|| mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageY
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteY && "unsupported address mode for LDX instruction");
+
+		// M -> X
+		cpu.m_XRegister = cpu.Read(address);
+
+		//Flags: 
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
+		// LDX instruction possibly takes an extra cycle 
+		return true;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::LDY(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
-		return false;
+		assert(mode == AddressingMode::Immediate
+			|| mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageX
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteX && "unsupported address mode for LDY instruction");
+
+		// M -> Y
+		cpu.m_YRegister = cpu.Read(address);
+
+		//Flags: 
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_YRegister)); // check if Y reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_YRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
+		// LDY instruction possibly takes an extra cycle 
+		return true;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::LSR(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::NOP(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::NOP(CPU&, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "NOP only supports implied address mode");
+		// No operation, does nothing
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::ORA(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		return false;

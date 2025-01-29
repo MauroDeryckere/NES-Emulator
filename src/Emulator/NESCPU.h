@@ -163,9 +163,9 @@ namespace NesEm
 			
 		}
 #pragma endregion
-
 #pragma endregion
 
+		// TODO
 		// Runs "Async" and can interupt the CPU at any point in time (will finish the current instruction 1st)
 		void Reset() noexcept;
 		void IRQ() noexcept;
