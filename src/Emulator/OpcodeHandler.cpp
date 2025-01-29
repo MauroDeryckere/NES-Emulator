@@ -212,7 +212,22 @@ namespace NesEm
 
 				// In this case our address (out) is set to the relative address
 				address = cpu.m_ProgramCounter + offset;
-	    		return 0;
+
+				// Check if the branch occurs on the same page or a different page
+				uint8_t const currentPage{ static_cast<uint8_t>(cpu.m_ProgramCounter >> 8) }; // high byte of current PC
+				uint8_t const targetPage{ static_cast<uint8_t>(address >> 8) };				  // high byte of target address
+
+				if (currentPage != targetPage) 
+				{
+					// add 2 to cycles if branch occurs to different page
+					return 2;
+				}
+	    		// add 1 to cycle if branch occurs on same page
+				return 1;
+
+	    		// Note: In this case we only want to add cycles if the branch actually happens
+				// Which we can only know during the actual opcode function
+				// -> Opcode returns true or false
 			} break;
 
 	    	case AddressingMode::ZeroPage:
