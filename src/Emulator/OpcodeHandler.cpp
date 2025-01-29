@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <limits>
+#include <cassert>
 
 namespace NesEm
 {
@@ -477,32 +478,94 @@ namespace NesEm
 	{
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::STY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+	FORCE_INLINE bool OpcodeHandler::STY(CPU& cpu, uint16_t, AddressingMode mode) noexcept
 	{
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::TAX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+
+#pragma region TransferFunctions
+	FORCE_INLINE bool OpcodeHandler::TAX(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Transfer opcodes only allow implied address modes");
+
+		// A -> X
+		cpu.m_XRegister = cpu.m_Accumulator;
+
+		//Flags: 
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X register is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::TAY(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::TAY(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Transfer opcodes only allow implied address modes");
+
+		// A -> Y
+		cpu.m_YRegister = cpu.m_Accumulator;
+
+		//Flags: 
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_YRegister)); // check if Y register is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_YRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::TSX(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::TSX(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Transfer opcodes only allow implied address modes");
+
+		// SP -> X
+		cpu.m_XRegister = cpu.m_StackPointer;
+
+		//Flags: 
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X register is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::TXA(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::TXA(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Transfer opcodes only allow implied address modes");
+
+		// X -> A
+		cpu.m_Accumulator = cpu.m_XRegister;
+
+		//Flags: 
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator)); // check if accumulator is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::TXS(CPU& cpu, uint16_t address, AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::TXS(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Transfer opcodes only allow implied address modes");
+
+		// X -> SP
+		cpu.m_StackPointer = cpu.m_XRegister;
+
+		//Flags:
+		// N Z C I D V
+		// - - - - - - 
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::TYA(CPU& cpu, uint16_t, AddressingMode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::TYA(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Transfer opcodes only allow implied address modes");
+
 		// Y -> A
 		cpu.m_Accumulator = cpu.m_YRegister;
 
@@ -514,6 +577,7 @@ namespace NesEm
 
 		return false;
 	}
+#pragma endregion
 	FORCE_INLINE bool OpcodeHandler::INV(CPU&, uint16_t, AddressingMode) noexcept
 	{
 		//We don't do anything with illegal opcodes at the moment.
