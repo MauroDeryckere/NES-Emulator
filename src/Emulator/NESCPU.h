@@ -40,7 +40,7 @@ namespace NesEm
 		uint8_t m_XRegister{ 0 };
 		uint8_t m_YRegister{ 0 };
 
-		uint16_t m_ProgramCounter{ 0 };
+		mutable uint16_t m_ProgramCounter{ 0 };
 		uint8_t m_StackPointer{ 0 };
 		uint8_t m_StatusRegister{ 0 };
 
@@ -103,25 +103,32 @@ namespace NesEm
 
 #pragma region Memory
 		// Read memory at program counter and increase the program counter
-		[[nodiscard]] FORCE_INLINE uint8_t Read() noexcept
+		[[nodiscard]] FORCE_INLINE uint8_t Read() const noexcept
 		{
 			return m_Memory.Read(m_ProgramCounter++);
 		}
 		// Read memory at a specific address
-		[[nodiscard]] FORCE_INLINE uint8_t Read(uint16_t address) noexcept
+		[[nodiscard]] FORCE_INLINE uint8_t Read(uint16_t address) const noexcept
 		{
 			return m_Memory.Read(address);
 		}
 
-		[[nodiscard]] FORCE_INLINE uint8_t Fetch() noexcept
+		// Write a value to a specific address
+		FORCE_INLINE void Write(uint16_t address, uint8_t value) noexcept
 		{
-			//TODO
-			return 0;
+			m_Memory.Write(address, value);
 		}
 
 #pragma region Stack
-		void Push(uint8_t value) noexcept;
-		[[nodiscard]] inline uint8_t Pop() noexcept;
+		//TODO
+		void Push(uint8_t value) noexcept
+		{
+			
+		}
+		[[nodiscard]] inline uint8_t Pop() noexcept
+		{
+			
+		}
 #pragma endregion
 
 #pragma endregion
