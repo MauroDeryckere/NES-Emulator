@@ -322,10 +322,48 @@ namespace NesEm
 	{
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::BRK(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Only implied address mode is allowed for BRK instruction");
+
+		// Force Break
+		// BRK initiates a software interrupt similar to a hardware
+		// interrupt(IRQ).The return address pushed to the stack is
+		// PC + 2, providing an extra byte of spacing for a break mark
+		// (identifying a reason for the break.)
+		// The status register will be pushed to the stack with the break
+		// flag set to 1. However, when retrieved during RTI or by a PLP
+		// instruction, the break flag will be ignored.
+		// The interrupt disable flag is not set automatically.
+
+		// interrupt, push PC + 2, push SR
+		++cpu.m_ProgramCounter; // PC + 2 means we need an additional increase for our PC first
+
+		cpu.Push((cpu.m_ProgramCounter >> 8) & 0xFF); // High
+		cpu.Push(cpu.m_ProgramCounter & 0xFF); // Low
+
+		//Flags: 
+		// N Z C I D V
+		// - - - 1 - -
+		// https://www.masswerk.at/6502/6502_instruction_set.html#break-flag
+
+		cpu.SetFlag(CPU::StatusFlags::U); // Unused flag should always be set when pushing P to the stack
+		cpu.SetFlag(CPU::StatusFlags::I); // "Prevent further IRQs from interrupting execution."
+		// Break flag is set before we push the status register
+		cpu.SetFlag(CPU::StatusFlags::B);
+
+		cpu.Push(cpu.m_StatusRegister);
+
+		// But is cleared after again
+		cpu.ClearFlag(CPU::StatusFlags::B);
+
+		// Load new PC from IRQ/BRK vector at $FFFE/$FFFF
+		cpu.m_ProgramCounter = (cpu.Read(0xFFFF) << 8) | cpu.Read(0xFFFE);
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::BVC(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		return false;

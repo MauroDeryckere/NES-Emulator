@@ -41,7 +41,7 @@ namespace NesEm
 		uint8_t m_YRegister{ 0 };
 
 		mutable uint16_t m_ProgramCounter{ 0 };
-		uint8_t m_StackPointer{ 0 };
+		uint8_t m_StackPointer{ 255 }; // Whenever we reset the stack pointer should be set to 0xFF or 255, for now initialize it at this
 		uint8_t m_StatusRegister{ 0 };
 
 		//Counter of cycles to be executed before next instruction may be executed
@@ -153,14 +153,14 @@ namespace NesEm
 		}
 
 #pragma region Stack
-		//TODO
 		void Push(uint8_t value) noexcept
 		{
-			
+			Write(0x0100 + m_StackPointer--, value);
 		}
+
 		[[nodiscard]] inline uint8_t Pop() noexcept
 		{
-			
+			return Read(0x0100 + m_StackPointer++);
 		}
 #pragma endregion
 #pragma endregion
