@@ -453,13 +453,13 @@ namespace NesEm
 		// + + + - - -
 
 		// Carry Flag (C) - Set if A >= M (i.e., no borrow)
-		cpu.SetFlag(CPU::StatusFlags::C, cpu.m_Accumulator >= operand);
+		cpu.SetOrClearFlag(CPU::StatusFlags::C, cpu.m_Accumulator >= operand);
 
 		// Zero Flag (Z) - Set if (A - M) == 0
-		cpu.SetFlag(CPU::StatusFlags::Z, (not result));
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not result));
 
 		// Negative Flag (N) - Set if bit 7 of the result is set (result is negative)
-		cpu.SetFlag(CPU::StatusFlags::N, (result & 0b1000'0000));
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (result & 0b1000'0000));
 
 		// CMP takes an extra cycle when crossing boundraries
 		return true;
@@ -480,13 +480,13 @@ namespace NesEm
 		// + + + - - -
 
 		// Carry Flag (C) - Set if X >= M (i.e., no borrow)
-		cpu.SetFlag(CPU::StatusFlags::C, cpu.m_XRegister >= operand);
+		cpu.SetOrClearFlag(CPU::StatusFlags::C, cpu.m_XRegister >= operand);
 
 		// Zero Flag (Z) - Set if (X - M) == 0
-		cpu.SetFlag(CPU::StatusFlags::Z, (not result));
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not result));
 
 		// Negative Flag (N) - Set if bit 7 of the result is set (result is negative)
-		cpu.SetFlag(CPU::StatusFlags::N, (result & 0b1000'0000));
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (result & 0b1000'0000));
 
 		return false;
 	}
@@ -506,13 +506,13 @@ namespace NesEm
 		// + + + - - -
 
 		// Carry Flag (C) - Set if Y >= M (i.e., no borrow)
-		cpu.SetFlag(CPU::StatusFlags::C, cpu.m_YRegister >= operand);
+		cpu.SetOrClearFlag(CPU::StatusFlags::C, cpu.m_YRegister >= operand);
 
 		// Zero Flag (Z) - Set if (Y - M) == 0
-		cpu.SetFlag(CPU::StatusFlags::Z, (not result));
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not result));
 
 		// Negative Flag (N) - Set if bit 7 of the result is set (result is negative)
-		cpu.SetFlag(CPU::StatusFlags::N, (result & 0b1000'0000));
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (result & 0b1000'0000));
 
 		return false;
 	}
@@ -532,8 +532,8 @@ namespace NesEm
 		//Flags:
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not newValue)); // check if val reg is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (newValue & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not newValue)); // check if val reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (newValue & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		return false;
 	}
@@ -548,8 +548,8 @@ namespace NesEm
 		//Flags:
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X reg is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		return false;
 	}
@@ -564,8 +564,8 @@ namespace NesEm
 		//Flags:
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_YRegister)); // check if Y reg is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_YRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_YRegister)); // check if Y reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_YRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		return false;
 	}
@@ -590,8 +590,8 @@ namespace NesEm
 		//Flags:
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not newValue)); // check if val reg is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (newValue & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not newValue)); // check if val reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (newValue & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		return false;
 	}
@@ -606,8 +606,8 @@ namespace NesEm
 		//Flags:
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X reg is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		return false;
 	}
@@ -622,8 +622,8 @@ namespace NesEm
 		//Flags:
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_YRegister)); // check if Y reg is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_YRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_YRegister)); // check if Y reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_YRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		return false;
 	}
@@ -654,8 +654,8 @@ namespace NesEm
 		//Flags: 
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator)); // check if accumulator is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator)); // check if accumulator is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		// LDA instruction possibly takes an extra cycle 
 		return true;
@@ -675,8 +675,8 @@ namespace NesEm
 		//Flags: 
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X reg is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		// LDX instruction possibly takes an extra cycle 
 		return true;
@@ -696,8 +696,8 @@ namespace NesEm
 		//Flags: 
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_YRegister)); // check if Y reg is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_YRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_YRegister)); // check if Y reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_YRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		// LDY instruction possibly takes an extra cycle 
 		return true;
@@ -720,22 +720,75 @@ namespace NesEm
 	{
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::PHA(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::PHA(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Only implied address mode is supported for stack operation");
+
+		// push A
+		cpu.Push(cpu.m_Accumulator);
+
+		//Flags: 
+		// N Z C I D V
+		// - - - - - -
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::PHP(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::PHP(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Only implied address mode is supported for stack operation");
+
+		// The status register will be pushed with the break flag and bit 5 set to 1.
+		// push SR
+		cpu.SetFlag(CPU::StatusFlags::B);
+		cpu.SetFlag(CPU::StatusFlags::U);
+
+		cpu.Push(cpu.m_StatusRegister);
+
+		cpu.ClearFlag(CPU::StatusFlags::B);
+		cpu.ClearFlag(CPU::StatusFlags::U);
+
+		//Flags: 
+		// N Z C I D V
+		// - - - - - -
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::PLA(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::PLA(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Only implied address mode is supported for stack operation");
+
+		cpu.m_Accumulator = cpu.Pop();
+
+		//Flags: 
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator)); // check if accumulator is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::PLP(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::PLP(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Only implied address mode is supported for stack operation");
+
+		// The status register will be pulled with the break flag and bit 5 ignored.
+		// pull SR
+		cpu.m_StatusRegister = cpu.Pop();
+
+		cpu.SetFlag(CPU::StatusFlags::U);
+		cpu.ClearFlag(CPU::StatusFlags::B);
+
+		//Flags: 
+		// N Z C I D V
+		// From stack
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::ROL(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		return false;
@@ -863,8 +916,8 @@ namespace NesEm
 		//Flags: 
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X register is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X register is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		return false;
 	}
@@ -879,8 +932,8 @@ namespace NesEm
 		//Flags: 
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_YRegister)); // check if Y register is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_YRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_YRegister)); // check if Y register is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_YRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		return false;
 	}
@@ -895,8 +948,8 @@ namespace NesEm
 		//Flags: 
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X register is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X register is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		return false;
 	}
@@ -911,8 +964,8 @@ namespace NesEm
 		//Flags: 
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator)); // check if accumulator is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator)); // check if accumulator is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		return false;
 	}
@@ -941,8 +994,8 @@ namespace NesEm
 		//Flags: 
 		// N Z C I D V
 		// + + - - - -
-		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator)); // check if accumulator is 0 or not, if 0 -> zero flag -> true, else -> false
-		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator)); // check if accumulator is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
 
 		return false;
 	}

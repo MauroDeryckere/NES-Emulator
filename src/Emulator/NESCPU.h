@@ -74,7 +74,7 @@ namespace NesEm
 		// Param StatusFlags status flag to set
 		// Param bool value, when true set the bit when false clear the bit
 		// Sets or clears (depending on the provided value) a specific status flag
-		FORCE_INLINE void SetFlag(StatusFlags flag, bool value) noexcept
+		FORCE_INLINE void SetOrClearFlag(StatusFlags flag, bool value) noexcept
 		{
 			static_assert(std::is_unsigned_v<std::underlying_type_t<StatusFlags>>);
 			static_assert(std::is_enum_v<StatusFlags>);
