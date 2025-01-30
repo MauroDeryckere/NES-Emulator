@@ -479,10 +479,10 @@ namespace NesEm
 		// N Z C I D V
 		// + + + - - -
 
-		// Carry Flag (C) - Set if A >= M (i.e., no borrow)
+		// Carry Flag (C) - Set if X >= M (i.e., no borrow)
 		cpu.SetFlag(CPU::StatusFlags::C, cpu.m_XRegister >= operand);
 
-		// Zero Flag (Z) - Set if (A - M) == 0
+		// Zero Flag (Z) - Set if (X - M) == 0
 		cpu.SetFlag(CPU::StatusFlags::Z, (not result));
 
 		// Negative Flag (N) - Set if bit 7 of the result is set (result is negative)
@@ -505,10 +505,10 @@ namespace NesEm
 		// N Z C I D V
 		// + + + - - -
 
-		// Carry Flag (C) - Set if A >= M (i.e., no borrow)
+		// Carry Flag (C) - Set if Y >= M (i.e., no borrow)
 		cpu.SetFlag(CPU::StatusFlags::C, cpu.m_YRegister >= operand);
 
-		// Zero Flag (Z) - Set if (A - M) == 0
+		// Zero Flag (Z) - Set if (Y - M) == 0
 		cpu.SetFlag(CPU::StatusFlags::Z, (not result));
 
 		// Negative Flag (N) - Set if bit 7 of the result is set (result is negative)
