@@ -270,9 +270,10 @@ namespace NesEm
 
 	    	case AddressingMode::Other:
 			{
+				assert(false);
 				// Set address to 0xFFFF to make it easier to debug if we ever accidentally enter this address mode
 				address = 0xFFFF;
-				return 0;
+				return std::numeric_limits<uint8_t>::max();
 			} break;
 
 	    	default: break;
