@@ -435,14 +435,85 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::CMP(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
-		return false;
+		assert(mode == AddressingMode::Immediate
+			|| mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageX
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteX
+			|| mode == AddressingMode::AbsoluteY
+			|| mode == AddressingMode::IndirectX
+			|| mode == AddressingMode::IndirectY && "unsupported address mode for CMP instruction");
+
+		// A - M
+		uint8_t const operand = cpu.Read(address);
+		auto const result{ cpu.m_Accumulator - operand };
+
+		//Flags:
+		// N Z C I D V
+		// + + + - - -
+
+		// Carry Flag (C) - Set if A >= M (i.e., no borrow)
+		cpu.SetFlag(CPU::StatusFlags::C, cpu.m_Accumulator >= operand);
+
+		// Zero Flag (Z) - Set if (A - M) == 0
+		cpu.SetFlag(CPU::StatusFlags::Z, (not result));
+
+		// Negative Flag (N) - Set if bit 7 of the result is set (result is negative)
+		cpu.SetFlag(CPU::StatusFlags::N, (result & 0b1000'0000));
+
+		// CMP takes an extra cycle when crossing boundraries
+		return true;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::CPX(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Immediate
+			  || mode == AddressingMode::ZeroPage
+			  || mode == AddressingMode::Absolute && "unsupported address mode for CPX instruction");
+
+		// X - M
+		uint8_t const operand = cpu.Read(address);
+		auto const result{ cpu.m_XRegister - operand };
+
+		//Flags:
+		// N Z C I D V
+		// + + + - - -
+
+		// Carry Flag (C) - Set if A >= M (i.e., no borrow)
+		cpu.SetFlag(CPU::StatusFlags::C, cpu.m_XRegister >= operand);
+
+		// Zero Flag (Z) - Set if (A - M) == 0
+		cpu.SetFlag(CPU::StatusFlags::Z, (not result));
+
+		// Negative Flag (N) - Set if bit 7 of the result is set (result is negative)
+		cpu.SetFlag(CPU::StatusFlags::N, (result & 0b1000'0000));
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::CPY(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Immediate
+			|| mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::Absolute && "unsupported address mode for CPY instruction");
+
+		// Y - M
+		uint8_t const operand = cpu.Read(address);
+		auto const result{ cpu.m_YRegister - operand };
+
+		//Flags:
+		// N Z C I D V
+		// + + + - - -
+
+		// Carry Flag (C) - Set if A >= M (i.e., no borrow)
+		cpu.SetFlag(CPU::StatusFlags::C, cpu.m_YRegister >= operand);
+
+		// Zero Flag (Z) - Set if (A - M) == 0
+		cpu.SetFlag(CPU::StatusFlags::Z, (not result));
+
+		// Negative Flag (N) - Set if bit 7 of the result is set (result is negative)
+		cpu.SetFlag(CPU::StatusFlags::N, (result & 0b1000'0000));
+
 		return false;
 	}
 
