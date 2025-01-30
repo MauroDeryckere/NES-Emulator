@@ -445,34 +445,118 @@ namespace NesEm
 	{
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::DEC(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageX
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteX && "unsupported address mode for DEC instruction");
+
+
+		//M - 1 -> M
+		auto const newValue{ cpu.Read(address) - 1};
+		cpu.Write(address, newValue);
+
+		//Flags:
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not newValue)); // check if val reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (newValue & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::DEX(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::DEX(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "DEX only supports implied address mode");
+
+		// X - 1 -> X
+		--cpu.m_XRegister;
+
+		//Flags:
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::DEY(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::DEY(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "DEY only supports implied address mode");
+
+		// X - 1 -> Y
+		--cpu.m_YRegister;
+
+		//Flags:
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_YRegister)); // check if Y reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_YRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::EOR(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::INC(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageX
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteX && "unsupported address mode for INC instruction");
+
+
+		//M + 1 -> M
+		auto const newValue{ cpu.Read(address) + 1 };
+		cpu.Write(address, newValue);
+
+		//Flags:
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not newValue)); // check if val reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (newValue & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::INX(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::INX(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "INX only supports implied address mode");
+
+		// X + 1 -> X
+		++cpu.m_XRegister;
+
+		//Flags:
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_XRegister)); // check if X reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_XRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::INY(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::INY(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "INY only supports implied address mode");
+
+		// Y + 1 -> Y
+		++cpu.m_YRegister;
+
+		//Flags:
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetFlag(CPU::StatusFlags::Z, (not cpu.m_YRegister)); // check if Y reg is 0 or not, if 0 -> zero flag -> true, else -> false
+		cpu.SetFlag(CPU::StatusFlags::N, (cpu.m_YRegister & 0b1000'0000)); // check negative bit, if negative bit is set, negative flag -> true; else -> false
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::JMP(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		return false;
