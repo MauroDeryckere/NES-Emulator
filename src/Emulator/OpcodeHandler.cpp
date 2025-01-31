@@ -291,7 +291,47 @@ namespace NesEm
 #pragma region OpcodeFunctions
 	FORCE_INLINE bool OpcodeHandler::ADC(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
-		return false;
+		assert(mode == AddressingMode::Immediate
+			|| mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageX
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteX
+			|| mode == AddressingMode::AbsoluteY
+			|| mode == AddressingMode::IndirectX
+			|| mode == AddressingMode::IndirectY && "unsupported address mode for ADC instruction");
+
+		// A + M + C -> A, C
+		uint16_t const sum{ static_cast<uint16_t>(cpu.m_Accumulator) + 
+							static_cast<uint16_t>(cpu.Read(address)) + 
+							cpu.IsFlagSet(CPU::StatusFlags::C) ? uint16_t{ 1 } : uint16_t{ 0 } };
+
+		bool const signA{ static_cast<bool>(cpu.m_Accumulator & 0b1000'0000) };
+		bool const signM{ static_cast<bool>(cpu.Read(address) & 0b1000'0000) };
+		bool const signResult{ static_cast<bool>(sum & 0b1000'0000) };
+
+		cpu.m_Accumulator = static_cast<uint8_t>(sum); // Will cut off any "overflow"
+
+		//Flags: 
+		// N Z C I D V
+		// + + + - - +
+		// https://www.masswerk.at/6502/6502_instruction_set.html#arithmetic
+
+		// Carry flag (C) - Set if sum exceeds 8-bit capacity
+		cpu.SetOrClearFlag(CPU::StatusFlags::C, (sum > 0xFF));
+
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator));
+
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000));
+
+		// V indicates overflow in signed operations
+		// -> (sign A == sign M) and (sign result != sign A)
+		// If A and M are positive but the result is negative -> overflow
+		// If A and M are negative but the result is positive -> overflow
+		cpu.SetOrClearFlag(CPU::StatusFlags::V, (signA == signM) && (signA != signResult));
+
+
+		// ADC instruction takes an extra cycle when crossing boundrary
+		return true;
 	}
 
 	FORCE_INLINE bool OpcodeHandler::AND(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
@@ -1200,6 +1240,8 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::SBC(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		// https://www.masswerk.at/6502/6502_instruction_set.html#arithmetic
+
 		return false;
 	}
 
