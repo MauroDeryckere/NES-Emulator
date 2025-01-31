@@ -297,8 +297,32 @@ namespace NesEm
 	{
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::ASL(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Accumulator
+			 || mode == AddressingMode::ZeroPage
+			 || mode == AddressingMode::ZeroPageX
+			 || mode == AddressingMode::Absolute
+			 || mode == AddressingMode::AbsoluteX && "Shift instructions only support ACC, ZPG, ZPX, ABS and ABX address mode");
+
+		uint8_t const originalValue{ (mode == AddressingMode::Accumulator) ? cpu.m_Accumulator : cpu.Read(address) };
+
+		// C <- [76543210] <- 0
+		auto const newValue{ static_cast<uint8_t>((originalValue << 1)) };
+
+		mode == AddressingMode::Accumulator ?
+			cpu.m_Accumulator = newValue :
+			cpu.Write(address, newValue);
+
+		//Flags: 
+		// N Z C I D V
+		// + + + - - -
+
+		cpu.SetOrClearFlag(CPU::StatusFlags::C, (originalValue & 0b1000'0000)); // Extract bit 7 as new carry
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not newValue));
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (newValue & 0b1000'0000));
+
 		return false;
 	}
 
@@ -881,6 +905,27 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::LSR(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Accumulator
+			|| mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageX
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteX && "Shift instructions only support ACC, ZPG, ZPX, ABS and ABX address mode");
+
+		uint8_t const originalValue{ (mode == AddressingMode::Accumulator) ? cpu.m_Accumulator : cpu.Read(address) };
+
+		// 0 -> [76543210] -> C
+		uint8_t const newValue{ static_cast<uint8_t>((originalValue >> 1)) };
+
+		mode == AddressingMode::Accumulator ? cpu.m_Accumulator = newValue : cpu.Write(address, newValue);
+
+		//Flags: 
+		// N Z C I D V
+		// 0 + + - - -
+
+		cpu.SetOrClearFlag(CPU::StatusFlags::C, (originalValue & 0b0000'0001)); // Carry = bit 0 of original value
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not newValue));
+		cpu.ClearFlag(CPU::StatusFlags::N); // negative is always cleared due to nature of shifting to right without carry
+
 		return false;
 	}
 
@@ -1013,7 +1058,7 @@ namespace NesEm
 
 		cpu.SetOrClearFlag(CPU::StatusFlags::C, (originalValue & 0b0000'0001)); // Carry = bit 0 of original value
 		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not newValue));
-		cpu.SetOrClearFlag(CPU::StatusFlags::N, (newValue & 0b1000'0000));
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (newValue & 0b1000'0000)); // This is set to the carry of the original value due to the nature of shifting to the right with carry
 
 		return false;
 	}
