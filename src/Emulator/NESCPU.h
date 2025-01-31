@@ -18,7 +18,27 @@ namespace NesEm
 	class CPU final
 	{
 	public:
-		CPU() = default;
+		CPU()
+		{
+			// https://www.nesdev.org/wiki/CPU_power_up_state
+
+			m_Accumulator = 0;
+			m_XRegister = 0;
+			m_YRegister = 0;
+
+			m_StackPointer = STACK_PTR_INIT;
+
+			m_StatusRegister = 0;
+
+			// At power state of the CPU
+			// Data at location 0x0FFC can be set by programmer, this is the "entry point" for the program
+			// Program counter should be set to this data whenever we Reset
+			// LL | HH
+			m_ProgramCounter = static_cast<uint16_t>(Read(RESET_VECTOR) | (Read(RESET_VECTOR + 1) << 8));
+			SetFlag(StatusFlags::I);
+			SetFlag(StatusFlags::U);
+
+		}
 		~CPU() = default;
 
 		void Clock() noexcept;
@@ -29,6 +49,16 @@ namespace NesEm
 		CPU& operator=(CPU&&) = delete;
 
 	private:
+#pragma region constants
+
+		static constexpr uint16_t STACK_PTR_INIT{ 0xFD };
+
+		static constexpr uint16_t NON_MASK_INTERRUPT_VECTOR{ 0xFFFA };
+		static constexpr uint16_t RESET_VECTOR{ 0x0FFC };
+		static constexpr uint16_t INTERRUPT_VECTOR{ 0xFFFE };
+
+#pragma endregion
+
 		// Opcode handler should be friended since we do need access to some private variables
 		// Like editing registers, ...
 		friend class OpcodeHandler;
@@ -40,8 +70,10 @@ namespace NesEm
 		uint8_t m_XRegister{ 0 };
 		uint8_t m_YRegister{ 0 };
 
-		mutable uint16_t m_ProgramCounter{ 0 };
-		uint8_t m_StackPointer{ 255 }; // Whenever we reset the stack pointer should be set to 0xFF or 255, for now initialize it at this
+		mutable uint16_t m_ProgramCounter{ };
+
+		// Whenever we reset the stack pointer should be set to 0xFD
+		uint8_t m_StackPointer{ };
 		uint8_t m_StatusRegister{ 0 };
 
 		//Counter of cycles to be executed before next instruction may be executed
@@ -58,6 +90,7 @@ namespace NesEm
 			V = (1 << 6), // Overflow
 			N = (1 << 7)  // Negative
 		};
+
 		// Convenience functions to access status register
 
 		// Param StatusFlags status flag we check
@@ -165,11 +198,61 @@ namespace NesEm
 #pragma endregion
 #pragma endregion
 
-		// TODO
 		// Runs "Async" and can interupt the CPU at any point in time (will finish the current instruction 1st)
-		void Reset() noexcept;
-		void IRQ() noexcept;
-		void NMI() noexcept;
+		void Reset() noexcept
+		{
+			// When te CPU is "reset" it is set to a known state with the following values
+			m_StackPointer -= 3;
+
+			SetFlag(StatusFlags::U); // Unusued bit should always be set
+			SetFlag(StatusFlags::I); // Interupt disable is set to on when Reset
+
+			// Data at location 0x0FFC can be set by programmer, this is the "entry point" for the program
+			// Program counter should be set to this data whenever we Reset
+			// LL | HH
+			m_ProgramCounter = static_cast<uint16_t>(Read(RESET_VECTOR) | (Read(RESET_VECTOR + 1) << 8));
+
+			// Reset takes 8 cycles
+			m_CurrCycles = 8;
+		}
+
+		void IRQ() noexcept
+		{
+			// https://www.nesdev.org/wiki/CPU_interrupts
+			if (not IsFlagSet(StatusFlags::I))
+				return;
+
+			Push((m_ProgramCounter << 8) & 0x00FF);
+			Push(m_ProgramCounter & 0x00FF);
+
+			ClearFlag(StatusFlags::B);
+			SetFlag(StatusFlags::U);
+			SetFlag(StatusFlags::U);
+
+			Push(m_StatusRegister);
+
+			// LL | HH
+			m_ProgramCounter = static_cast<uint16_t>(Read(INTERRUPT_VECTOR) | (Read(INTERRUPT_VECTOR + 1) << 8));
+
+			m_CurrCycles = 7;
+		}
+
+		void NMI() noexcept
+		{
+			Push((m_ProgramCounter << 8) & 0x00FF);
+			Push(m_ProgramCounter & 0x00FF);
+
+			ClearFlag(StatusFlags::B);
+			SetFlag(StatusFlags::U);
+			SetFlag(StatusFlags::U);
+
+			Push(m_StatusRegister);
+
+			// LL | HH
+			m_ProgramCounter = static_cast<uint16_t>(Read(NON_MASK_INTERRUPT_VECTOR) | (Read(NON_MASK_INTERRUPT_VECTOR + 1) << 8));
+
+			m_CurrCycles = 8;
+		}
 	};
 }
 
