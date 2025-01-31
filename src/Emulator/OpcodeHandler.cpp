@@ -293,9 +293,29 @@ namespace NesEm
 	{
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::AND(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
-		return false;
+		assert(mode == AddressingMode::Immediate
+			|| mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageX
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteX
+			|| mode == AddressingMode::AbsoluteY
+			|| mode == AddressingMode::IndirectX
+			|| mode == AddressingMode::IndirectY && "unsupported address mode for AND instruction");
+
+		// A AND M -> A
+		cpu.m_Accumulator &= cpu.Read(address);
+
+		//Flags: 
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator));
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000));
+
+		// AND instruction possibly takes an extra cycle when crossing page boundrary
+		return true;
 	}
 
 	FORCE_INLINE bool OpcodeHandler::ASL(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
@@ -743,7 +763,26 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::EOR(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
-		return false;
+		assert(mode == AddressingMode::Immediate
+			|| mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageX
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteX
+			|| mode == AddressingMode::AbsoluteY
+			|| mode == AddressingMode::IndirectX
+			|| mode == AddressingMode::IndirectY && "unsupported address mode for EOR instruction");
+
+		// A EOR M -> A
+		cpu.m_Accumulator ^= cpu.Read(address);
+
+		//Flags:
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator));
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000));
+
+		// EOR intruction could take an extra cycle when crossing page boundrary
+		return true;
 	}
 
 	FORCE_INLINE bool OpcodeHandler::INC(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
@@ -951,7 +990,26 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::ORA(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
-		return false;
+		assert(mode == AddressingMode::Immediate
+			|| mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageX
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteX
+			|| mode == AddressingMode::AbsoluteY
+			|| mode == AddressingMode::IndirectX
+			|| mode == AddressingMode::IndirectY && "unsupported address mode for ORA instruction");
+
+		// A OR M -> A
+		cpu.m_Accumulator |= cpu.Read(address);
+
+		//Flags:
+		// N Z C I D V
+		// + + - - - -
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not cpu.m_Accumulator));
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (cpu.m_Accumulator & 0b1000'0000));
+
+		// ORA intruction could take an extra cycle when crossing page boundrary
+		return true;
 	}
 
 	FORCE_INLINE bool OpcodeHandler::PHA(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
