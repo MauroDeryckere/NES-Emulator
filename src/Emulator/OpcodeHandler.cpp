@@ -311,9 +311,14 @@ namespace NesEm
 		// C <- [76543210] <- 0
 		auto const newValue{ static_cast<uint8_t>((originalValue << 1)) };
 
-		mode == AddressingMode::Accumulator ?
-			cpu.m_Accumulator = newValue :
+		if (mode == AddressingMode::Accumulator)
+		{
+			cpu.m_Accumulator = newValue;
+		}
+		else
+		{
 			cpu.Write(address, newValue);
+		}
 
 		//Flags: 
 		// N Z C I D V
@@ -916,7 +921,14 @@ namespace NesEm
 		// 0 -> [76543210] -> C
 		uint8_t const newValue{ static_cast<uint8_t>((originalValue >> 1)) };
 
-		mode == AddressingMode::Accumulator ? cpu.m_Accumulator = newValue : cpu.Write(address, newValue);
+		if (mode == AddressingMode::Accumulator)
+		{
+			cpu.m_Accumulator = newValue;
+		}
+		else
+		{
+			cpu.Write(address, newValue);
+		}
 
 		//Flags: 
 		// N Z C I D V
@@ -1020,11 +1032,16 @@ namespace NesEm
 		uint8_t const originalValue{ (mode == AddressingMode::Accumulator) ? cpu.m_Accumulator : cpu.Read(address) };
 
 		// C <- [76543210] <- C
-		auto const newValue{ static_cast<uint8_t>((originalValue << 1) | cpu.IsFlagSet(CPU::StatusFlags::C)) };
+		auto const newValue{ static_cast<uint8_t>((originalValue << 1) | static_cast<uint8_t>(cpu.IsFlagSet(CPU::StatusFlags::C))) };
 
-		mode == AddressingMode::Accumulator ? 
-			cpu.m_Accumulator = newValue :
-			cpu.Write(address,  newValue);
+		if (mode == AddressingMode::Accumulator)
+		{
+			cpu.m_Accumulator = newValue;
+		}
+		else
+		{
+			cpu.Write(address, newValue);
+		}
 
 		//Flags: 
 		// N Z C I D V
@@ -1048,9 +1065,16 @@ namespace NesEm
 		uint8_t const originalValue{ (mode == AddressingMode::Accumulator) ? cpu.m_Accumulator : cpu.Read(address) };
 
 		// C -> [76543210] -> C
-		uint8_t const newValue{ static_cast<uint8_t>((originalValue >> 1) | cpu.IsFlagSet(CPU::StatusFlags::C) ? 0b1000'0000 : 0) };
+		uint8_t const newValue{ static_cast<uint8_t>( (originalValue >> 1) | (cpu.IsFlagSet(CPU::StatusFlags::C) ? 0b1000'0000 : 0) ) };
 
-		mode == AddressingMode::Accumulator ? cpu.m_Accumulator = newValue : cpu.Write(address, newValue);
+		if (mode == AddressingMode::Accumulator)
+		{
+			cpu.m_Accumulator = newValue;
+		}
+		else
+		{
+			cpu.Write(address, newValue);
+		}
 
 		//Flags: 
 		// N Z C I D V
