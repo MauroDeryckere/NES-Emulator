@@ -773,8 +773,22 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::JMP(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Absolute 
+			 || mode == AddressingMode::Indirect && "JMP only supports absolute and indirect address mode");
+
+		// operand 1st byte -> PCL
+		// operand 2nd byte -> PCH
+		// But this was already set in the address mode function so we can just set our address
+
+		cpu.m_ProgramCounter = address;
+
+		//Flags:
+		// N Z C I D V
+		// - - - - - -
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::JSR(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		return false;
