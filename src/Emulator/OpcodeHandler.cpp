@@ -924,7 +924,6 @@ namespace NesEm
 		cpu.Push(cpu.m_StatusRegister);
 
 		cpu.ClearFlag(CPU::StatusFlags::B);
-		cpu.ClearFlag(CPU::StatusFlags::U);
 
 		//Flags: 
 		// N Z C I D V
@@ -956,7 +955,6 @@ namespace NesEm
 		// pull SR
 		cpu.m_StatusRegister = cpu.Pop();
 
-		cpu.SetFlag(CPU::StatusFlags::U);
 		cpu.ClearFlag(CPU::StatusFlags::B);
 
 		//Flags: 
@@ -974,14 +972,37 @@ namespace NesEm
 	{
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::RTI(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Only implied addressing mode is supported by RTI");
+
+		// The status register is pulled with the break flag and bit 5 ignored.Then PC is pulled from the stack.
+		// pull SR, pull PC
+		cpu.m_StatusRegister  = cpu.Pop();
+		cpu.ClearFlag(CPU::StatusFlags::B);
+
+		// N Z C I D V
+		// From stack
+
 		return false;
 	}
-	FORCE_INLINE bool OpcodeHandler::RTS(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+
+	FORCE_INLINE bool OpcodeHandler::RTS(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Implied && "Only implied addressing mode is supported by RTS");
+
+		// pull PC, PC+1 -> PC
+		// LL | HH
+		cpu.m_ProgramCounter = cpu.Pop() | (cpu.Pop() << 8);
+
+		//Flags: 
+		// N Z C I D V
+		// - - - - - -
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::SBC(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		return false;
