@@ -1252,6 +1252,9 @@ namespace NesEm
 		// https://www.masswerk.at/6502/6502_instruction_set.html#arithmetic
 		// A - M - !C -> A
 		// !C == NOT carry
+
+		// an EOR to convert the value is also possible and from there we could just use the same code as the ADC
+
 		uint16_t const res = static_cast<uint16_t>(cpu.m_Accumulator) -
 							static_cast<uint16_t>(cpu.Read(address)) -
 							(not cpu.IsFlagSet(CPU::StatusFlags::C) ? uint16_t{ 1 } : uint16_t{ 0 });
