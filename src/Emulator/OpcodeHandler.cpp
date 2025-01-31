@@ -24,16 +24,22 @@ namespace NesEm
 		static_assert(std::is_enum_v<decltype(instructionID)>);
 		static_assert(std::is_unsigned_v<std::underlying_type_t<decltype(instructionID)>>);
 
+        // We only want to add the cycles if the instruction requires this.
         if (OPCODES_6502_FUNCTIONS[static_cast<std::underlying_type_t<decltype(instructionID)>>(instructionID)](cpu, address, addressMode))
         {
-			// We only want to add the cycles if the instruction requires this.
+			assert(addedCycles != std::numeric_limits<uint8_t>::max());
+			assert(addressMode == AddressingMode::AbsoluteX 
+				|| addressMode == AddressingMode::AbsoluteX 
+				|| addressMode == AddressingMode::IndirectY 
+				|| addressMode == AddressingMode::Relative);
+
 			return cycles + addedCycles;
         }
 
         return cycles;
     }
 
-	uint8_t OpcodeHandler::HandleAddressMode(AddressingMode mode, CPU& cpu, uint16_t& address) const noexcept
+	uint8_t OpcodeHandler::HandleAddressMode(AddressingMode mode, [[maybe_unused]] CPU& cpu, [[maybe_unused]] uint16_t& address) const noexcept
     {
 		// More information for each address mode in more detail can be found at
 		// https://www.masswerk.at/6502/6502_instruction_set.html
@@ -295,32 +301,135 @@ namespace NesEm
 	{
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::BCC(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Relative && "Branching onl supports relative address mode");
+
+		// branch on C = 0
+		if (not cpu.IsFlagSet(CPU::StatusFlags::C))
+		{
+			// the address mode function handles setting our address to the relative address
+			cpu.m_ProgramCounter = address;
+
+			//Flags: 
+			// N Z C I D V
+			// - - - - - -
+
+			// Branch takes an extra cycle when it's executed and another cycle when boundrary is crossed
+			return true;
+		}
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::BCS(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Relative && "Branching onl supports relative address mode");
+
+		// branch on C = 1
+		if (cpu.IsFlagSet(CPU::StatusFlags::C))
+		{
+			// the address mode function handles setting our address to the relative address
+			cpu.m_ProgramCounter = address;
+
+			//Flags: 
+			// N Z C I D V
+			// - - - - - -
+
+			// Branch takes an extra cycle when it's executed and another cycle when boundrary is crossed
+			return true;
+		}
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::BEQ(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Relative && "Branching onl supports relative address mode");
+
+		// branch on Z = 1
+		if (cpu.IsFlagSet(CPU::StatusFlags::Z))
+		{
+			// the address mode function handles setting our address to the relative address
+			cpu.m_ProgramCounter = address;
+
+			//Flags: 
+			// N Z C I D V
+			// - - - - - -
+
+			// Branch takes an extra cycle when it's executed and another cycle when boundrary is crossed
+			return true;
+		}
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::BIT(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::BMI(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Relative && "Branching onl supports relative address mode");
+
+		// branch on N = 1
+		if (cpu.IsFlagSet(CPU::StatusFlags::N))
+		{
+			// the address mode function handles setting our address to the relative address
+			cpu.m_ProgramCounter = address;
+
+			//Flags: 
+			// N Z C I D V
+			// - - - - - -
+
+			// Branch takes an extra cycle when it's executed and another cycle when boundrary is crossed
+			return true;
+		}
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::BNE(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Relative && "Branching onl supports relative address mode");
+
+		// branch on Z = 0
+		if (not cpu.IsFlagSet(CPU::StatusFlags::Z))
+		{
+			// the address mode function handles setting our address to the relative address
+			cpu.m_ProgramCounter = address;
+
+			//Flags: 
+			// N Z C I D V
+			// - - - - - -
+
+			// Branch takes an extra cycle when it's executed and another cycle when boundrary is crossed
+			return true;
+		}
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::BPL(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Relative && "Branching onl supports relative address mode");
+
+		// branch on N = 0
+		if (not cpu.IsFlagSet(CPU::StatusFlags::N))
+		{
+			// the address mode function handles setting our address to the relative address
+			cpu.m_ProgramCounter = address;
+
+			//Flags: 
+			// N Z C I D V
+			// - - - - - -
+
+			// Branch takes an extra cycle when it's executed and another cycle when boundrary is crossed
+			return true;
+		}
+
 		return false;
 	}
 
@@ -367,10 +476,43 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::BVC(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Relative && "Branching onl supports relative address mode");
+
+		// branch on V = 0
+		if (not cpu.IsFlagSet(CPU::StatusFlags::V))
+		{
+			// the address mode function handles setting our address to the relative address
+			cpu.m_ProgramCounter = address;
+
+			//Flags: 
+			// N Z C I D V
+			// - - - - - -
+
+			// Branch takes an extra cycle when it's executed and another cycle when boundrary is crossed
+			return true;
+		}
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::BVS(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Relative && "Branching onl supports relative address mode");
+
+		// branch on V = 1
+		if (cpu.IsFlagSet(CPU::StatusFlags::V))
+		{
+			// the address mode function handles setting our address to the relative address
+			cpu.m_ProgramCounter = address;
+
+			//Flags: 
+			// N Z C I D V
+			// - - - - - -
+
+			// Branch takes an extra cycle when it's executed and another cycle when boundrary is crossed
+			return true;
+		}
+
 		return false;
 	}
 
