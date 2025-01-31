@@ -791,6 +791,26 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::JSR(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Absolute && "JSR only supports absolute and indirect address mode");
+
+		// push(PC + 2)
+		// PC + 2 means we need an additional increase for our PC first
+		// But Absolute address mode increases our PC twice so we should decrease the current PC before we push
+		--cpu.m_ProgramCounter;
+
+		cpu.Push((cpu.m_ProgramCounter >> 8) & 0xFF); // High
+		cpu.Push(cpu.m_ProgramCounter & 0xFF); // Low
+
+		// operand 1st byte->PCL
+		// operand 2nd byte->PCH
+		// But this was already set in the address mode function so we can just set our address
+
+		cpu.m_ProgramCounter = address;
+
+		//Flags:
+		// N Z C I D V
+		// - - - - - -
+
 		return false;
 	}
 
