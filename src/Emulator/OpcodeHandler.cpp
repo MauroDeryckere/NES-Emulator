@@ -966,10 +966,55 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::ROL(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Accumulator
+			|| mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageX
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteX && "Rotate instructions only support ACC, ZPG, ZPX, ABS and ABX address mode");
+
+		uint8_t const originalValue{ (mode == AddressingMode::Accumulator) ? cpu.m_Accumulator : cpu.Read(address) };
+
+		// C <- [76543210] <- C
+		auto const newValue{ static_cast<uint8_t>((originalValue << 1) | cpu.IsFlagSet(CPU::StatusFlags::C)) };
+
+		mode == AddressingMode::Accumulator ? 
+			cpu.m_Accumulator = newValue :
+			cpu.Write(address,  newValue);
+
+		//Flags: 
+		// N Z C I D V
+		// + + + - - -
+
+		cpu.SetOrClearFlag(CPU::StatusFlags::C, (originalValue & 0b1000'0000)); // Extract bit 7 as new carry
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not newValue));
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (newValue & 0b1000'0000));
+
 		return false;
 	}
+
 	FORCE_INLINE bool OpcodeHandler::ROR(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::Accumulator
+			|| mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::ZeroPageX
+			|| mode == AddressingMode::Absolute
+			|| mode == AddressingMode::AbsoluteX && "Rotate instructions only support ACC, ZPG, ZPX, ABS, and ABX address modes");
+
+		uint8_t const originalValue{ (mode == AddressingMode::Accumulator) ? cpu.m_Accumulator : cpu.Read(address) };
+
+		// C -> [76543210] -> C
+		uint8_t const newValue{ static_cast<uint8_t>((originalValue >> 1) | cpu.IsFlagSet(CPU::StatusFlags::C) ? 0b1000'0000 : 0) };
+
+		mode == AddressingMode::Accumulator ? cpu.m_Accumulator = newValue : cpu.Write(address, newValue);
+
+		//Flags: 
+		// N Z C I D V
+		// + + + - - -
+
+		cpu.SetOrClearFlag(CPU::StatusFlags::C, (originalValue & 0b0000'0001)); // Carry = bit 0 of original value
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, (not newValue));
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (newValue & 0b1000'0000));
+
 		return false;
 	}
 
