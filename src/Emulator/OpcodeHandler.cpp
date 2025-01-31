@@ -460,11 +460,10 @@ namespace NesEm
 
 		cpu.SetFlag(CPU::StatusFlags::U); // Unused flag should always be set when pushing P to the stack
 		cpu.SetFlag(CPU::StatusFlags::I); // "Prevent further IRQs from interrupting execution."
+
 		// Break flag is set before we push the status register
 		cpu.SetFlag(CPU::StatusFlags::B);
-
 		cpu.Push(cpu.m_StatusRegister);
-
 		// But is cleared after again
 		cpu.ClearFlag(CPU::StatusFlags::B);
 
@@ -956,6 +955,7 @@ namespace NesEm
 		cpu.m_StatusRegister = cpu.Pop();
 
 		cpu.ClearFlag(CPU::StatusFlags::B);
+		cpu.SetFlag(CPU::StatusFlags::U); // Unused bit is always set to 1 
 
 		//Flags: 
 		// N Z C I D V
@@ -981,6 +981,7 @@ namespace NesEm
 		// pull SR, pull PC
 		cpu.m_StatusRegister  = cpu.Pop();
 		cpu.ClearFlag(CPU::StatusFlags::B);
+		cpu.SetFlag(CPU::StatusFlags::U); // Unused bit is always set to 1 
 
 		// LL | HH
 		cpu.m_ProgramCounter = cpu.Pop() | (cpu.Pop() << 8);
