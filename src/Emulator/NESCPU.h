@@ -153,12 +153,12 @@ namespace NesEm
 		}
 
 #pragma region Stack
-		void Push(uint8_t value) noexcept
+		FORCE_INLINE void Push(uint8_t value) noexcept
 		{
 			Write(0x0100 + m_StackPointer--, value);
 		}
 
-		[[nodiscard]] inline uint8_t Pop() noexcept
+		[[nodiscard]] FORCE_INLINE uint8_t Pop() noexcept
 		{
 			return Read(0x0100 + m_StackPointer++);
 		}
