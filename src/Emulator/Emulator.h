@@ -2,6 +2,8 @@
 #define NES_EMULATOR
 
 #include "NESCPU.h"
+#include "NESPPU.h"
+#include "NESCartridge.h"
 
 namespace NesEm
 {
@@ -19,6 +21,8 @@ namespace NesEm
 		Emulator& operator=(Emulator&&) = delete;
 	private:
 		CPU m_Cpu{  };
+		PPU m_Ppu{  };
+		Cartridge m_Cartridge{  };
 	};
 }
 
