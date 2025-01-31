@@ -416,6 +416,25 @@ namespace NesEm
 
 	FORCE_INLINE bool OpcodeHandler::BIT(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
 	{
+		assert(mode == AddressingMode::ZeroPage
+			|| mode == AddressingMode::Absolute && "BIT instruction only supports ZPG and ABS address mode");
+
+		// bits 7 and 6 of operand are transfered to bit 7 and 6 of SR(N, V);
+		// the zero - flag is set according to the result of the operand AND the accumulator(set, if the result is zero, unset otherwise).
+		// This allows a quick check of a few bits at once without affecting any of the registers, other than the status register (SR).
+		// https://www.masswerk.at/6502/6502_instruction_set.html#bitcompare
+
+		//A AND M->Z, M7->N, M6->V
+		auto const value{ cpu.Read(address) };
+
+		//Flags: 
+		// N  Z  C  I  D  V
+		// M7 +  -  -  -  M6
+
+		cpu.SetOrClearFlag(CPU::StatusFlags::V, (value & 0b0100'0000)); // Set NV to M6
+		cpu.SetOrClearFlag(CPU::StatusFlags::N, (value & 0b1000'0000)); // Set N to M7
+		cpu.SetOrClearFlag(CPU::StatusFlags::Z, not (value & cpu.m_Accumulator)); // check if result is not 0, if zero -> set flag
+
 		return false;
 	}
 
