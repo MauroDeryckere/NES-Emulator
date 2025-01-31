@@ -973,7 +973,7 @@ namespace NesEm
 		return false;
 	}
 
-	FORCE_INLINE bool OpcodeHandler::RTI(CPU& cpu, uint16_t address, [[maybe_unused]] AddressingMode mode) noexcept
+	FORCE_INLINE bool OpcodeHandler::RTI(CPU& cpu, uint16_t, [[maybe_unused]] AddressingMode mode) noexcept
 	{
 		assert(mode == AddressingMode::Implied && "Only implied addressing mode is supported by RTI");
 
@@ -981,6 +981,9 @@ namespace NesEm
 		// pull SR, pull PC
 		cpu.m_StatusRegister  = cpu.Pop();
 		cpu.ClearFlag(CPU::StatusFlags::B);
+
+		// LL | HH
+		cpu.m_ProgramCounter = cpu.Pop() | (cpu.Pop() << 8);
 
 		// N Z C I D V
 		// From stack
