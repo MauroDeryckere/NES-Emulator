@@ -20,6 +20,6 @@ namespace NesEm
 	{
 		m_CPU.Reset();
 
-		m_SystemClock = 0;
+		m_MasterClock = 0;
 	}
 }
