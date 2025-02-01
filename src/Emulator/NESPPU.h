@@ -3,8 +3,15 @@
 
 #include "NESMemory.h"
 
+/* Various sources used during development of the Cartridge of our emulator:
+ * https://www.youtube.com/watch?v=xdzOvpYPmGE&list=PLrOv9FMX8xJHqMvSGB_9G9nZZ_4IgteYf&index=4
+ * https://www.nesdev.org/wiki/PPU
+ */
+
 namespace NesEm
 {
+	// The PPU or Picture Processing Unit is basically a very early representation of a GPU
+	// it has its own address space and handles anything related to background and sprite rendering
 	class PPU final
 	{
 	public:
@@ -13,7 +20,7 @@ namespace NesEm
 
 		void Clock() noexcept
 		{
-			
+			//TODO	
 		}
 
 		PPU(PPU const&) = delete;

@@ -28,7 +28,7 @@ namespace NesEm
 		CPU m_CPU;
 		Cartridge m_Cartridge;
 
-		uint64_t m_SystemClock{ 0 };
+		uint64_t m_MasterClock{ 0 };
 	};
 }
 
