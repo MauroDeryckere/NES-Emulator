@@ -33,14 +33,7 @@ endif()
 # Sources
 add_subdirectory(src EXCLUDE_FROM_ALL)
 
-# Check if we are on Windows
-if(WIN32)
-    # On Windows, treat the project as a GUI application (no console)
-    add_executable(${EXECUTABLE_NAME} WIN32 ${SOURCES})
-else()
-    # For non-Windows platforms, create a normal console application
-    add_executable(${EXECUTABLE_NAME} ${SOURCES})
-endif()
+add_executable(${EXECUTABLE_NAME} ${SOURCES})
 
 # Dependencies
 add_subdirectory(3rdParty EXCLUDE_FROM_ALL)
@@ -66,6 +59,16 @@ if (APPLE)
         target_sources(${EXECUTABLE_NAME} PRIVATE ${FILE})
         set_property(SOURCE ${FILE} PROPERTY MACOSX_PACKAGE_LOCATION "Resources/${relpath}")
     endmacro()
+endif()
+
+# Copy resources after the build process
+if(WIN32)
+    # Ensure that the Resources directory is created inside the final output directory
+    add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/Resources"
+            "$<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/Resources"
+    )
 endif()
 
 # set some extra configs for each platform

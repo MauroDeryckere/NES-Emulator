@@ -4,6 +4,8 @@
 #include <cstdint>
 
 #include "NESMemory.h"
+#include "NESCartridge.h"
+#include "NESPPU.h"
 #include "OpcodeHandler.h"
 
 /* Various sources used during development of the CPU of our emulator: 
@@ -18,30 +20,28 @@ namespace NesEm
 	class CPU final
 	{
 	public:
-		CPU()
+		CPU(PPU& ppu);
+		~CPU() = default;
+
+		void Clock() noexcept;
+
+		// Runs "Async" and can interupt the CPU at any point in time (will finish the current instruction 1st)
+		void Reset() noexcept
 		{
-			// https://www.nesdev.org/wiki/CPU_power_up_state
+			// When te CPU is "reset" it is set to a known state with the following values
+			m_StackPointer -= 3;
 
-			m_Accumulator = 0;
-			m_XRegister = 0;
-			m_YRegister = 0;
+			SetFlag(StatusFlags::U); // Unusued bit should always be set
+			SetFlag(StatusFlags::I); // Interupt disable is set to on when Reset
 
-			m_StackPointer = STACK_PTR_INIT;
-
-			m_StatusRegister = 0;
-
-			// At power state of the CPU
 			// Data at location 0x0FFC can be set by programmer, this is the "entry point" for the program
 			// Program counter should be set to this data whenever we Reset
 			// LL | HH
 			m_ProgramCounter = static_cast<uint16_t>(Read(RESET_VECTOR) | (Read(RESET_VECTOR + 1) << 8));
-			SetFlag(StatusFlags::I);
-			SetFlag(StatusFlags::U);
 
+			// Reset takes 8 cycles
+			m_CurrCycles = 8;
 		}
-		~CPU() = default;
-
-		void Clock() noexcept;
 
 		CPU(CPU const&) = delete;
 		CPU(CPU&&) = delete;
@@ -57,9 +57,14 @@ namespace NesEm
 		static constexpr uint16_t RESET_VECTOR{ 0x0FFC };
 		static constexpr uint16_t INTERRUPT_VECTOR{ 0xFFFE };
 
-		static constexpr uint16_t ADDRESSABLE_RAM_RANGE{ 0x1FFF };
+		static constexpr uint16_t ADDRESSABLE_RAM_RANGE_END{ 0x1FFF };
+
+		static constexpr uint16_t ADDRESSABLE_PPU_RANGE_START{ 0x2000 };
+		static constexpr uint16_t ADDRESSABLE_PPU_RANGE_END{ 0x3FFF };
 
 #pragma endregion
+
+		PPU& m_PPU;
 
 		// Opcode handler should be friended since we do need access to some private variables
 		// Like editing registers, ...
@@ -179,19 +184,41 @@ namespace NesEm
 		// Read memory at a specific address
 		[[nodiscard]] FORCE_INLINE uint8_t Read(uint16_t address) const noexcept
 		{
-			assert(address <= ADDRESSABLE_RAM_RANGE);
+			if (address <= ADDRESSABLE_RAM_RANGE_END)
+			{
+				//Handle mirroring since there is an 8KB addressable range for our 2KB RAM
+				return m_Memory.Read(address & 0x07FF);
+			}
 
-			//Handle mirroring since there is an 8KB addressable range for our 2KB RAM
-			return m_Memory.Read(address & 0x07FF);
+			if (address >= ADDRESSABLE_PPU_RANGE_START && address <= ADDRESSABLE_PPU_RANGE_END)
+			{
+				//Handle mirroring
+				//return m_PPU.Read(address & 8);
+				return 0;
+			}
+
+			//assert(false);
+			return 0;
 		}
 
 		// Write a value to a specific address
 		FORCE_INLINE void Write(uint16_t address, uint8_t value) noexcept
 		{
-			assert(address <= ADDRESSABLE_RAM_RANGE);
+			if (address <= ADDRESSABLE_RAM_RANGE_END)
+			{
+				//Handle mirroring since there is an 8KB addressable range for our 2KB RAM
+				m_Memory.Write(address & 0x07FF, value);
+				return;
+			}
 
-			//Handle mirroring since there is an 8KB addressable range for our 2KB RAM
-			m_Memory.Write(address & 0x07FF, value);
+			if (address >= ADDRESSABLE_PPU_RANGE_START && address <= ADDRESSABLE_PPU_RANGE_END)
+			{
+				//Handle mirroring
+				//m_PPU.Write(address & 8, value);
+				return;
+			}
+
+			assert(false);
 		}
 
 #pragma region Stack
@@ -208,23 +235,6 @@ namespace NesEm
 #pragma endregion
 
 		// Runs "Async" and can interupt the CPU at any point in time (will finish the current instruction 1st)
-		void Reset() noexcept
-		{
-			// When te CPU is "reset" it is set to a known state with the following values
-			m_StackPointer -= 3;
-
-			SetFlag(StatusFlags::U); // Unusued bit should always be set
-			SetFlag(StatusFlags::I); // Interupt disable is set to on when Reset
-
-			// Data at location 0x0FFC can be set by programmer, this is the "entry point" for the program
-			// Program counter should be set to this data whenever we Reset
-			// LL | HH
-			m_ProgramCounter = static_cast<uint16_t>(Read(RESET_VECTOR) | (Read(RESET_VECTOR + 1) << 8));
-
-			// Reset takes 8 cycles
-			m_CurrCycles = 8;
-		}
-
 		void IRQ() noexcept
 		{
 			// https://www.nesdev.org/wiki/CPU_interrupts

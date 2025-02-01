@@ -7,7 +7,7 @@
 
 namespace NesEm
 {
-	template <size_t Size>
+	template <std::size_t RAM_SIZE>
 	class NESMemory final
 	{
 	public:
@@ -32,7 +32,7 @@ namespace NesEm
 		}
 
 	private:
-		std::array<uint8_t, Size> m_RAM{  };
+		std::array<uint8_t, RAM_SIZE> m_RAM{  };
 	};
 }
 
