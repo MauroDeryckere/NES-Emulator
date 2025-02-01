@@ -57,6 +57,8 @@ namespace NesEm
 		static constexpr uint16_t RESET_VECTOR{ 0x0FFC };
 		static constexpr uint16_t INTERRUPT_VECTOR{ 0xFFFE };
 
+		static constexpr uint16_t ADDRESSABLE_RAM_RANGE{ 0x1FFF };
+
 #pragma endregion
 
 		// Opcode handler should be friended since we do need access to some private variables
@@ -64,7 +66,8 @@ namespace NesEm
 		friend class OpcodeHandler;
 
 		OpcodeHandler m_OpcodeHandler{ };
-		NESMemory m_Memory{ };
+		//2KB RAM
+		NESMemory<2048> m_Memory{ };
 
 		uint8_t m_Accumulator{ 0 };
 		uint8_t m_XRegister{ 0 };
@@ -176,13 +179,19 @@ namespace NesEm
 		// Read memory at a specific address
 		[[nodiscard]] FORCE_INLINE uint8_t Read(uint16_t address) const noexcept
 		{
-			return m_Memory.Read(address);
+			assert(address <= ADDRESSABLE_RAM_RANGE);
+
+			//Handle mirroring since there is an 8KB addressable range for our 2KB RAM
+			return m_Memory.Read(address & 0x07FF);
 		}
 
 		// Write a value to a specific address
 		FORCE_INLINE void Write(uint16_t address, uint8_t value) noexcept
 		{
-			m_Memory.Write(address, value);
+			assert(address <= ADDRESSABLE_RAM_RANGE);
+
+			//Handle mirroring since there is an 8KB addressable range for our 2KB RAM
+			m_Memory.Write(address & 0x07FF, value);
 		}
 
 #pragma region Stack

@@ -7,6 +7,7 @@
 
 namespace NesEm
 {
+	template <size_t Size>
 	class NESMemory final
 	{
 	public:
@@ -31,11 +32,7 @@ namespace NesEm
 		}
 
 	private:
-		std::array<uint8_t, static_cast<std::size_t>(64 * 1024)> m_RAM{  };
-
-		// No mapper support for now
-		// std::shared_ptr<Mapper> mapper; // Cartridge mapper
-
+		std::array<uint8_t, Size> m_RAM{  };
 	};
 }
 
