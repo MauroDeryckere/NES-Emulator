@@ -13,7 +13,12 @@ namespace NesEm
 	class NROMMapper final : public Mapper
 	{
 	public:
-		NROMMapper() = default;
+		NROMMapper(uint8_t chrBanks, uint8_t prgBanks) :
+			Mapper{ chrBanks, prgBanks }
+		{
+
+		}
+
 		virtual ~NROMMapper() override = default;
 
 		NROMMapper(NROMMapper const&) = delete;
@@ -25,5 +30,5 @@ namespace NesEm
 		// PPU has no bank switching
 
 	private:
-	}
+	};
 }

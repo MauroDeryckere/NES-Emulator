@@ -11,6 +11,8 @@
 
 #include "SDL3/SDL.h"
 
+#include "NROMMapper.h"
+
 /* Various sources used during development of the Cartridge of our emulator:
  * https://www.youtube.com/watch?v=xdzOvpYPmGE&list=PLrOv9FMX8xJHqMvSGB_9G9nZZ_4IgteYf&index=4
  * https://www.nesdev.org/wiki/INES
@@ -51,6 +53,8 @@ namespace NesEm
 
 		// Which mapper are we using
 		uint8_t m_MapperID{ 0 };
+
+		std::shared_ptr<Mapper> m_pMapper;
 	};
 }
 
