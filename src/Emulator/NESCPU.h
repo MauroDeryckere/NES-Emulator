@@ -197,6 +197,8 @@ namespace NesEm
 				return 0;
 			}
 
+			//return m_Cartridge.Read(address);
+
 			//assert(false);
 			return 0;
 		}
@@ -217,6 +219,8 @@ namespace NesEm
 				//m_PPU.Write(address & 8, value);
 				return;
 			}
+
+			// m_Cartridge.Write(address, value);
 
 			assert(false);
 		}

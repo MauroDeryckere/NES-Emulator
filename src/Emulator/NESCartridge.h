@@ -30,6 +30,7 @@ namespace NesEm
 		~Cartridge() = default;
 
 
+
 		Cartridge(Cartridge const&) = delete;
 		Cartridge(Cartridge&&) = delete;
 		Cartridge& operator=(Cartridge const&) = delete;
