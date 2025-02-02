@@ -4,9 +4,9 @@
 #include <cstdint>
 #include <cassert>
 
-#include "Macros.h"
 #include "SDL3/SDL_log.h"
 
-#include "EmulatorSettings.h"
+#include "Emulator/Macros.h"
+#include "Emulator/EmulatorSettings.h"
 
 #endif
