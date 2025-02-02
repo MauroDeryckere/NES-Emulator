@@ -86,16 +86,20 @@ namespace  NesEm
 				throw std::runtime_error("Invalid NES file: PRG ROM is incomplete");
 			}
 
-			m_CHR.resize(m_CHRBanks * 0x2000);
-			if (m_CHR.size() > 0)
+			if (m_CHRBanks == 0)
 			{
-				input.read(reinterpret_cast<char*>(m_CHR.data()), m_CHR.size());
-				if (input.gcount() != m_CHR.size())
-				{
-					throw std::runtime_error("Invalid NES file: CHR ROM is incomplete");
-				}
+				m_CHR.resize(8192);
+			}
+			else
+			{
+				m_CHR.resize(m_CHRBanks * 8192);
 			}
 
+			input.read(reinterpret_cast<char*>(m_CHR.data()), m_CHR.size());
+			if (input.gcount() != m_CHR.size())
+			{
+				throw std::runtime_error("Invalid NES file: CHR ROM is incomplete");
+			}
 		}
 		else
 		{

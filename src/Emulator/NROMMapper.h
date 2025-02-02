@@ -50,6 +50,7 @@ namespace NesEm
 
 			// No CHR mapping is required
 			// No PRG map return
+
 			return false;
 		}
 

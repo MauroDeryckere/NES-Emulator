@@ -180,14 +180,7 @@ namespace NesEm
 		// Read memory at program counter and increase the program counter
 		[[nodiscard]] FORCE_INLINE uint8_t Read() const noexcept
 		{
-			if (m_ProgramCounter <= ADDRESSABLE_RAM_RANGE_END) // Check if we should read CPU RAM
-			{
-				return m_Memory.Read(m_ProgramCounter++);
-			}
-			else // Otherwise we should read CART ROM
-			{
-				return m_Cartridge.Read(m_ProgramCounter++);
-			}
+			return Read(m_ProgramCounter++);
 		}
 
 		// Read memory at a specific address

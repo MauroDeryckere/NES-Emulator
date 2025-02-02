@@ -1,5 +1,6 @@
 #include "NESCPU.h"
 
+#include <iostream>
 namespace NesEm
 {
 	CPU::CPU(PPU& ppu, Cartridge& cart):
@@ -34,7 +35,6 @@ namespace NesEm
 		{
 			// Get correct code from table & increase program counter
 			uint8_t const opcodeID{ Read() };
-
 			// Update cycles based on instruction from the table
 			m_CurrCycles = m_OpcodeHandler.ExecuteOpcode(opcodeID, (*this));
 		}
