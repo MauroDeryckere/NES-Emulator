@@ -40,7 +40,6 @@ namespace NesEm
 			// Get correct code from table & increase program counter
 			uint8_t const opcodeID{ Read() };
 
-			//Currently keeps swapping between BPL and LDA - TODO
 			SDL_Log("%d", int(opcodeID));
 
 			// Update cycles based on instruction from the table
