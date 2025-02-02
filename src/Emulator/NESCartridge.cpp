@@ -95,14 +95,17 @@ namespace  NesEm
 					throw std::runtime_error("Invalid NES file: CHR ROM is incomplete");
 				}
 			}
+
 		}
 		else
 		{
 			throw std::runtime_error("Could not open file");
 		}
 
-		assert(m_MapperID == 0 && "Currenrly only supporting NROM mapper");
+		assert(m_MapperID == 0 && "Currenyly only supporting NROM mapper");
 		// Load the correct mapper and store it
 		m_pMapper = std::make_shared<NROMMapper>(m_CHRBanks, m_PRGBanks);
+
+		SDL_Log("%s", "Cartridge loaded successfully");
 	}
 }
