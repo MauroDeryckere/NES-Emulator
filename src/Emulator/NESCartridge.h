@@ -1,9 +1,10 @@
 #ifndef NES_EMULATOR_CARTRIDGE
 #define NES_EMULATOR_CARTRIDGE
 
+#include "PCH.h"
+
 #include "NESMemory.h"
 
-#include <cassert>
 #include <exception>
 #include <vector>
 #include <filesystem>

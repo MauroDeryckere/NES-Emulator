@@ -1,8 +1,8 @@
 #ifndef NES_EMULATOR_MEMORY
 #define NES_EMULATOR_MEMORY
 
-#include <cassert>
-#include <cstdint>
+#include "PCH.h"
+
 #include <array>
 
 namespace NesEm

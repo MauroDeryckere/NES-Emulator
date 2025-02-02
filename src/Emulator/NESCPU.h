@@ -1,7 +1,7 @@
 #ifndef NES_EMULATOR_CPU
 #define NES_EMULATOR_CPU
 
-#include <cstdint>
+#include "PCH.h"
 
 #include "NESMemory.h"
 #include "NESCartridge.h"

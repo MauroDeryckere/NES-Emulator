@@ -1,11 +1,9 @@
 #ifndef NES_EMULATOR_OPCODEHANDLER
 #define NES_EMULATOR_OPCODEHANDLER
 
-
 // Includes
-#include "Macros.h"
+#include "PCH.h"
 
-#include <cstdint>
 #include <array>
 
 namespace NesEm

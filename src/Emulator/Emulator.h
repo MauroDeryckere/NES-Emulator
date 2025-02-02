@@ -1,6 +1,8 @@
 #ifndef NES_EMULATOR
 #define NES_EMULATOR
 
+#include "PCH.h"
+
 #include "NESCPU.h"
 #include "NESPPU.h"
 #include "NESCartridge.h"

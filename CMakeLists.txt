@@ -35,6 +35,9 @@ add_subdirectory(src EXCLUDE_FROM_ALL)
 
 add_executable(${EXECUTABLE_NAME} ${SOURCES})
 
+target_precompile_headers(${EXECUTABLE_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Emulator/pch.h)
+
+
 # Dependencies
 add_subdirectory(3rdParty EXCLUDE_FROM_ALL)
 # Link the 3rd party interface library to the project
