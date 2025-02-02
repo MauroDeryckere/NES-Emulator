@@ -78,7 +78,7 @@ namespace  NesEm
 			}
 
 			// Read the CHR and PRG data
-			m_PRG.resize(m_PRGBanks * 16384);
+			m_PRG.resize(m_PRGBanks * 0x4000);
 			input.read(reinterpret_cast<char*>(m_PRG.data()), m_PRG.size());
 
 			if (input.gcount() != m_PRG.size())
@@ -86,7 +86,7 @@ namespace  NesEm
 				throw std::runtime_error("Invalid NES file: PRG ROM is incomplete");
 			}
 
-			m_CHR.resize(m_CHRBanks * 8192);
+			m_CHR.resize(m_CHRBanks * 0x2000);
 			if (m_CHR.size() > 0)
 			{
 				input.read(reinterpret_cast<char*>(m_CHR.data()), m_CHR.size());

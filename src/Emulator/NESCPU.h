@@ -180,8 +180,16 @@ namespace NesEm
 		// Read memory at program counter and increase the program counter
 		[[nodiscard]] FORCE_INLINE uint8_t Read() const noexcept
 		{
-			return m_Memory.Read(m_ProgramCounter++);
+			if (m_ProgramCounter <= ADDRESSABLE_RAM_RANGE_END) // Check if we should read CPU RAM
+			{
+				return m_Memory.Read(m_ProgramCounter++);
+			}
+			else // Otherwise we should read CART ROM
+			{
+				return m_Cartridge.Read(m_ProgramCounter++);
+			}
 		}
+
 		// Read memory at a specific address
 		[[nodiscard]] FORCE_INLINE uint8_t Read(uint16_t address) const noexcept
 		{
@@ -190,8 +198,7 @@ namespace NesEm
 				//Handle mirroring since there is an 8KB addressable range for our 2KB RAM
 				return m_Memory.Read(address & 0x07FF);
 			}
-
-			if (address >= ADDRESSABLE_PPU_RANGE_START && address <= ADDRESSABLE_PPU_RANGE_END)
+			else if (address >= ADDRESSABLE_PPU_RANGE_START && address <= ADDRESSABLE_PPU_RANGE_END)
 			{
 				//Handle mirroring
 				//return m_PPU.Read(address & 8);
@@ -211,8 +218,7 @@ namespace NesEm
 				m_Memory.Write(address & 0x07FF, value);
 				return;
 			}
-
-			if (address >= ADDRESSABLE_PPU_RANGE_START && address <= ADDRESSABLE_PPU_RANGE_END)
+			else if (address >= ADDRESSABLE_PPU_RANGE_START && address <= ADDRESSABLE_PPU_RANGE_END)
 			{
 				//Handle mirroring
 				//m_PPU.Write(address & 8, value);
