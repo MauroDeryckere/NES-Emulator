@@ -1,10 +1,11 @@
 #include "Emulator.h"
+#include "EmulatorSettings.h"
 
 namespace NesEm
 {
 	Emulator::Emulator():
 	m_PPU{ },
-	m_CPU{ m_PPU },
+	m_CPU{ m_PPU, m_Cartridge },
 	m_Cartridge{ "Resources/test.nes" }
 	{
 
@@ -14,11 +15,30 @@ namespace NesEm
 		// Run the PPU
 		m_PPU.Clock();
 
-		// This depends on the mode our NES runs in (PAL vs NTSC)
-		if (m_MasterClock % 4 == 0)
+		switch (Config::MODE)
 		{
-			// Run the CPU
-			m_CPU.Clock();
+		case Config::NES_MODE::PAL:
+		{
+			// 5 master clocks pet PPU dot
+			if (m_MasterClock % 5 == 0)
+			{
+				// Run the CPU
+				m_CPU.Clock();
+			}
+		}break;
+
+		case Config::NES_MODE::NTSC:
+		{
+			// 4 master clocks pet PPU dot
+			if (m_MasterClock % 4 == 0)
+			{
+				// Run the CPU
+				m_CPU.Clock();
+			}
+
+		}break;
+
+		default: break;
 		}
 
 		++m_MasterClock;

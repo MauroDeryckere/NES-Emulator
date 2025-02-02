@@ -2,10 +2,12 @@
 #define NES_EMULATOR_PPU
 
 #include "NESMemory.h"
+#include "EmulatorSettings.h"
 
-/* Various sources used during development of the Cartridge of our emulator:
+/* Various sources used during development of the PPU of our emulator:
  * https://www.youtube.com/watch?v=xdzOvpYPmGE&list=PLrOv9FMX8xJHqMvSGB_9G9nZZ_4IgteYf&index=4
  * https://www.nesdev.org/wiki/PPU
+ * https://www.nesdev.org/wiki/Cycle_reference_chart
  */
 
 namespace NesEm
@@ -22,15 +24,34 @@ namespace NesEm
 		{
 			++m_CurrCyle;
 
-			if (m_CurrCyle >= 341)
+			switch (Config::MODE)
 			{
-				m_CurrCyle = 0;
-				++m_CurrScanline;
-				if (m_CurrScanline >= 261)
+
+			case Config::NES_MODE::PAL:
+			{
+				// PAL total number of dots per frame:
+				// 341 x 312
+			}break;
+
+			case Config::NES_MODE::NTSC:
+			{
+				// NTSC total number of dots per frame:
+				// 341 x 261  + 340.5 (pre render line is one dot shorter in every odd frame)
+				if (m_CurrCyle >= 341)
 				{
-					m_CurrScanline = -1;
-					m_FrameComplete = true;
+					m_CurrCyle = 0;
+					++m_CurrScanline;
+					if (m_CurrScanline >= 261)
+					{
+						m_CurrScanline = -1;
+						m_FrameComplete = true;
+					}
 				}
+
+			}break;
+
+			default: break;
+
 			}
 		}
 

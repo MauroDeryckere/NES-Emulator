@@ -20,7 +20,7 @@ namespace NesEm
 	class CPU final
 	{
 	public:
-		CPU(PPU& ppu);
+		CPU(PPU& ppu, Cartridge& cart);
 		~CPU() = default;
 
 		void Clock() noexcept;
@@ -65,6 +65,7 @@ namespace NesEm
 #pragma endregion
 
 		PPU& m_PPU;
+		Cartridge& m_Cartridge;
 
 		// Opcode handler should be friended since we do need access to some private variables
 		// Like editing registers, ...
@@ -197,10 +198,8 @@ namespace NesEm
 				return 0;
 			}
 
-			//return m_Cartridge.Read(address);
-
-			//assert(false);
-			return 0;
+			// Mapper in cartridge will handle mirroring and adjusting the address if necessar
+			return m_Cartridge.Read(address);
 		}
 
 		// Write a value to a specific address
@@ -220,9 +219,8 @@ namespace NesEm
 				return;
 			}
 
-			// m_Cartridge.Write(address, value);
-
-			assert(false);
+			// Mapper in cartridge will handle mirroring and adjusting the address if necessar
+			m_Cartridge.Write(address, value);
 		}
 
 #pragma region Stack

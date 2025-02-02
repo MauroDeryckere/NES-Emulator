@@ -2,8 +2,9 @@
 
 namespace NesEm
 {
-	CPU::CPU(PPU& ppu):
+	CPU::CPU(PPU& ppu, Cartridge& cart):
 	m_PPU{ ppu },
+	m_Cartridge{ cart },
 
 	m_Memory{  },
 

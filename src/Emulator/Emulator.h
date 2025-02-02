@@ -5,6 +5,12 @@
 #include "NESPPU.h"
 #include "NESCartridge.h"
 
+
+/* Various sources used during development of the Emulator class of our emulator:
+ * https://www.nesdev.org/wiki/Cycle_reference_chart
+ *
+ */
+
 namespace NesEm
 {
 	class Emulator final
@@ -21,7 +27,6 @@ namespace NesEm
 		Emulator(Emulator&&) = delete;
 		Emulator& operator=(Emulator const&) = delete;
 		Emulator& operator=(Emulator&&) = delete;
-
 
 	private:
 		PPU m_PPU;

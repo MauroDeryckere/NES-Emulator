@@ -31,7 +31,41 @@ namespace NesEm
 
 		~Cartridge() = default;
 
+		// Read from cartridge
+		[[nodiscard]] uint8_t Read(uint16_t address) const noexcept
+		{
+			// use the mapper to "redirect" our address and read the value
 
+			uint16_t mappedAddr{ address };
+			bool const isPRG{ m_pMapper->MapAddress(mappedAddr) };
+
+			if (isPRG)
+			{
+				assert(mappedAddr <= m_PRG.size());
+				return m_PRG[mappedAddr];
+			}
+
+			assert(mappedAddr <= m_CHR.size());
+			return m_CHR[mappedAddr];
+		}
+
+		// Write to cartridge
+		void Write(uint16_t address, uint8_t value) noexcept
+		{
+			// use the mapper to "redirect" our address and read the value
+
+			uint16_t mappedAddr{ address };
+			bool const isPRG{ m_pMapper->MapAddress(mappedAddr) };
+
+			if (isPRG)
+			{
+				assert(mappedAddr <= m_PRG.size());
+				m_PRG[mappedAddr] = value;
+			}
+
+			assert(mappedAddr <= m_CHR.size());
+			m_CHR[mappedAddr] = value;
+		}
 
 		Cartridge(Cartridge const&) = delete;
 		Cartridge(Cartridge&&) = delete;
@@ -41,6 +75,7 @@ namespace NesEm
 	private:
 		// ROM - PRG
 		std::vector<uint8_t> m_PRG{};
+
 		// ROM - CHR
 		std::vector<uint8_t> m_CHR{};
 
