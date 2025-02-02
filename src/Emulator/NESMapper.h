@@ -1,7 +1,7 @@
 #ifndef NES_EMULATOR_MAPPER
 #define NES_EMULATOR_MAPPER
 
-#include "PCH.h"
+#include "emulator_pch.h"
 
 // Sources
 // https://www.nesdev.org/wiki/Mapper

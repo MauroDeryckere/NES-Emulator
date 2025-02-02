@@ -1,7 +1,7 @@
 #ifndef NES_EMULATOR_MEMORY
 #define NES_EMULATOR_MEMORY
 
-#include "PCH.h"
+#include "emulator_pch.h"
 
 #include <array>
 

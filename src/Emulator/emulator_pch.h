@@ -6,7 +6,7 @@
 
 #include "SDL3/SDL_log.h"
 
-#include "Emulator/Macros.h"
-#include "Emulator/EmulatorSettings.h"
+#include "Macros.h"
+#include "EmulatorSettings.h"
 
 #endif

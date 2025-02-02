@@ -35,7 +35,7 @@ add_subdirectory(src EXCLUDE_FROM_ALL)
 
 add_executable(${EXECUTABLE_NAME} ${SOURCES})
 
-target_precompile_headers(${EXECUTABLE_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h)
+target_precompile_headers(${EXECUTABLE_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Emulator/emulator_pch.h)
 
 
 # Dependencies
