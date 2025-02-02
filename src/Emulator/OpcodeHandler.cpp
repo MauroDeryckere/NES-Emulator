@@ -28,10 +28,18 @@ namespace NesEm
         if (OPCODES_6502_FUNCTIONS[static_cast<std::underlying_type_t<decltype(instructionID)>>(instructionID)](cpu, address, addressMode))
         {
 			assert(addedCycles != std::numeric_limits<uint8_t>::max());
-			assert(addressMode == AddressingMode::AbsoluteX 
-				|| addressMode == AddressingMode::AbsoluteX 
-				|| addressMode == AddressingMode::IndirectY 
-				|| addressMode == AddressingMode::Relative);
+			assert([=]() -> bool
+				{
+					if (addedCycles != 0)
+					{
+						return(addressMode == AddressingMode::AbsoluteX
+							|| addressMode == AddressingMode::AbsoluteX
+							|| addressMode == AddressingMode::IndirectY
+							|| addressMode == AddressingMode::Relative);
+					}
+
+					return true;
+				}());
 
 			return cycles + addedCycles;
         }

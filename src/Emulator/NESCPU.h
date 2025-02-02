@@ -54,7 +54,7 @@ namespace NesEm
 		static constexpr uint16_t STACK_PTR_INIT{ 0xFD };
 
 		static constexpr uint16_t NON_MASK_INTERRUPT_VECTOR{ 0xFFFA };
-		static constexpr uint16_t RESET_VECTOR{ 0x0FFC };
+		static constexpr uint16_t RESET_VECTOR{ 0xFFFC };
 		static constexpr uint16_t INTERRUPT_VECTOR{ 0xFFFE };
 
 		static constexpr uint16_t ADDRESSABLE_RAM_RANGE_END{ 0x1FFF };
@@ -198,7 +198,7 @@ namespace NesEm
 				return 0;
 			}
 
-			// Mapper in cartridge will handle mirroring and adjusting the address if necessar
+			// Mapper in cartridge will handle mirroring and adjusting the address if necessary
 			return m_Cartridge.Read(address);
 		}
 

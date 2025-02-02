@@ -31,9 +31,9 @@ namespace NesEm
 		Emulator& operator=(Emulator&&) = delete;
 
 	private:
+		Cartridge m_Cartridge;
 		PPU m_PPU;
 		CPU m_CPU;
-		Cartridge m_Cartridge;
 
 		uint64_t m_MasterClock{ 0 };
 	};
