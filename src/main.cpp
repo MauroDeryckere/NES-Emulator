@@ -1,5 +1,6 @@
 #include "ServiceLocator.h"
 #include "SDLRenderer.h"
+#include "InputManager.h"
 
 #include "Timer.h"
 
@@ -8,7 +9,6 @@
 #include <thread>
 
 #include <SDL3/SDL_main.h>
-
 int main(int argc, char* argv[])
 {
 	using namespace NesEm;
@@ -31,40 +31,34 @@ int main(int argc, char* argv[])
 
 	Renderer& renderer{ ServiceLocator::GetRenderer() };
 	auto& time = GameTime::GetInstance();
+	auto& input = InputManager::GetInstance();
+
+	// Setup the game time
 	time.SetFPS(50.f);
+
+	// Setup the inputmanager
+	input.AddAction({"Fullscreen", 67, InputManager::InputAction::EventType::KeyDown });
+
 
 	// Initialize the NES emulator
 	Emulator emulator{ };
 
+
 	// toggle displaying fps in console window
-	constexpr bool displayFPS{ true };
+	constexpr bool displayFPS{ false };
 	float fpsTimer{ 0.f };
 	auto fpsCount{ 0 };
 
+
 	bool isRunning{ true };
-
-
 	while (isRunning)
 	{
 		time.Update();
 
-		//Handle Input & other events
-		SDL_Event event{ };
-		while(SDL_PollEvent(&event))
+		isRunning = input.ProcessInput();
+		if (input.IsActionExecuted("Fullscreen"))
 		{
-			switch (event.type)
-			{
-			case SDL_EVENT_QUIT:
-				isRunning = false;
-				break;
-			case SDL_EVENT_KEY_DOWN:
-				if (event.key.scancode == SDL_SCANCODE_F10)
-				{
-					renderer.ToggleFullScreen();
-				}
-				break;
-			default: break;
-			}
+			renderer.ToggleFullScreen();
 		}
 
 		while(time.IsLag())
