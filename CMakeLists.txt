@@ -50,6 +50,26 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 
 # @REGION PLATFORMS
 
+include(CheckCXXCompilerFlag)
+
+# Check for -Wdocumentation flag
+check_cxx_compiler_flag("-Wdocumentation" HAVE_GCC_WDOCUMENTATION)
+if(HAVE_GCC_WDOCUMENTATION)
+  add_compile_options(-Wdocumentation)
+endif()
+
+# Check for -Wdocumentation-unknown-command flag
+check_cxx_compiler_flag("-Wdocumentation-unknown-command" HAVE_GCC_WDOCUMENTATION_UNKNOWN_COMMAND)
+if(HAVE_GCC_WDOCUMENTATION_UNKNOWN_COMMAND)
+  add_compile_options(-Wdocumentation-unknown-command)
+endif()
+
+# Check for -Wcomment-block-commands flag
+check_cxx_compiler_flag("-Wcomment-block-commands" HAVE_GCC_COMMENT_BLOCK_COMMANDS)
+if(HAVE_GCC_COMMENT_BLOCK_COMMANDS)
+  add_compile_options(-Wcomment-block-commands)
+endif()
+
 # Dealing with assets
 # We have some non-code resources that our application needs in order to work. How we deal with those differs per platform.
 if (APPLE)
