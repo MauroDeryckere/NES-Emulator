@@ -52,7 +52,7 @@ namespace NesEm
 		auto it = m_ActionsMap.find(actionName);
 		if (it == end(m_ActionsMap))
 		{
-			SDL_Log("%s", "Action name not found -> " + actionName);
+			SDL_Log("%s, %s", "Action name not found ->" , actionName);
 			assert(false);
 			return false;
 		}
