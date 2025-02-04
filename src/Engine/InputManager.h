@@ -23,8 +23,9 @@ namespace NesEm
 				// The event type that will be used to know when an action is executed	
 				enum class EventType : uint8_t
 				{
-					KeyUp,
-					KeyDown,
+					KeyUp, // Up this frame
+					KeyDown, // Held
+					KeyDownThisFrame, // Down this frame
 					COUNT
 				};
 				// What is the scancode we look for
@@ -66,8 +67,11 @@ namespace NesEm
 
 			// similarly here, a vector for each event type
 
-			// scancodes we are listening to | SDL scancodes do not go past 512 so uint16 is sufficient.
+			// scancodes that were executed this frame
 			std::vector<std::unordered_set<uint16_t>> m_KeyCodes;
+
+			// scancodes that were executed last frame
+			std::vector<std::unordered_set<uint16_t>> m_KeyCodesLast;
 	};
 }
 

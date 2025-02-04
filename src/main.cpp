@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 	time.SetFPS(50.f);
 
 	// Setup the inputmanager
-	input.AddAction({"Fullscreen", 67, InputManager::InputAction::EventType::KeyDown });
+	input.AddAction({"Fullscreen", 67, InputManager::InputAction::EventType::KeyDownThisFrame });
 
 
 	// Initialize the NES emulator

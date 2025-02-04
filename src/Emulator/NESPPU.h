@@ -24,7 +24,7 @@ namespace NesEm
 
 		void Clock() noexcept
 		{
-			++m_CurrCyle;
+			++m_CurrCycle;
 
 			switch (Config::MODE)
 			{
@@ -39,9 +39,9 @@ namespace NesEm
 			{
 				// NTSC total number of dots per frame:
 				// 341 x 261  + 340.5 (pre render line is one dot shorter in every odd frame)
-				if (m_CurrCyle >= 341)
+				if (m_CurrCycle >= 341)
 				{
-					m_CurrCyle = 0;
+					m_CurrCycle = 0;
 					++m_CurrScanline;
 					if (m_CurrScanline >= 261)
 					{
@@ -63,13 +63,14 @@ namespace NesEm
 		PPU& operator=(PPU&&) = delete;
 
 	private:
-		uint32_t m_CurrCyle{};
+		uint16_t m_CurrCycle{};
 		uint16_t m_CurrScanline{};
 
 		bool m_FrameComplete{ false };
 
 		NESMemory<1024> m_Nametable_1{ };
 		NESMemory<1024> m_Nametable_2{ };
+
 		NESMemory<32> m_Pallete{ };
 	};
 }

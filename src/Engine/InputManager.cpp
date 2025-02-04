@@ -6,10 +6,12 @@ namespace NesEm
 {
 	bool InputManager::ProcessInput() noexcept
 	{
+		// overwrite the last frames data with the new data
+		m_KeyCodesLast = m_KeyCodes;
+
 		// Clear last frames info
 		m_KeyCodes.clear();
 		m_KeyCodes.resize(static_cast<size_t>(InputAction::EventType::COUNT));
-
 
 		SDL_Event event{ };
 		while (SDL_PollEvent(&event))
@@ -23,6 +25,12 @@ namespace NesEm
 				case SDL_EVENT_KEY_DOWN:
 				{
 					m_KeyCodes[static_cast<size_t>(InputAction::EventType::KeyDown)].emplace(static_cast<uint16_t>(event.key.scancode));
+
+					if (!event.key.repeat)
+					{
+						m_KeyCodes[static_cast<size_t>(InputAction::EventType::KeyDownThisFrame)].emplace(static_cast<uint16_t>(event.key.scancode));
+					}
+						
 				}break;
 				case SDL_EVENT_KEY_UP:
 				{
@@ -30,6 +38,8 @@ namespace NesEm
 				}break;
 			}
 		}
+
+		// Handle key pressed this fram
 
 		return true;
 	}
