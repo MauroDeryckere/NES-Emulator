@@ -71,6 +71,7 @@ int main(int argc, char* argv[])
 		emulator.Run();
 
 		//Render
+		emulator.Render();
 		renderer.Render();
 
 		//TODO

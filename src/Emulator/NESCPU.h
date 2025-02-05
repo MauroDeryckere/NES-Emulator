@@ -193,9 +193,10 @@ namespace NesEm
 			}
 			else if (address >= ADDRESSABLE_PPU_RANGE_START && address <= ADDRESSABLE_PPU_RANGE_END)
 			{
+				// Read from PPU registers
+
 				//Handle mirroring
-				//return m_PPU.Read(address & 8);
-				return 0;
+				return m_PPU.Read((address & 8));
 			}
 
 			// Mapper in cartridge will handle mirroring and adjusting the address if necessary
@@ -213,8 +214,10 @@ namespace NesEm
 			}
 			else if (address >= ADDRESSABLE_PPU_RANGE_START && address <= ADDRESSABLE_PPU_RANGE_END)
 			{
+				// Write to PPU registers
+
 				//Handle mirroring
-				//m_PPU.Write(address & 8, value);
+				m_PPU.Write((address & 8), value);
 				return;
 			}
 

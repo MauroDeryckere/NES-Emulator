@@ -25,6 +25,8 @@ namespace NesEm
 
 		void Reset() noexcept;
 
+		void Render() const noexcept;
+
 		Emulator(Emulator const&) = delete;
 		Emulator(Emulator&&) = delete;
 		Emulator& operator=(Emulator const&) = delete;

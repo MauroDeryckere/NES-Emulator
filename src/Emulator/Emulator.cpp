@@ -58,4 +58,9 @@ namespace NesEm
 
 		m_MasterClock = 0;
 	}
+
+	void Emulator::Render() const noexcept
+	{
+		m_PPU.Render();
+	}
 }
