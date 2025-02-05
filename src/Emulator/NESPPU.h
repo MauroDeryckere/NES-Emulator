@@ -194,7 +194,7 @@ namespace NesEm
 			};
 			static_assert(sizeof(PPU_CTRL) == 1, "PPU_CTRL must be exactly 1 byte!");
 
-			PPU_CTRL bits{ };
+			PPU_CTRL bits;
 			uint8_t raw{ };
 
 			// Allows assigning the full register directly
@@ -226,7 +226,7 @@ namespace NesEm
 			};
 			static_assert(sizeof(PPU_MASK) == 1, "PPU_MASK must be exactly 1 byte!");
 
-			PPU_MASK bits{ };
+			PPU_MASK bits;
 			uint8_t raw{ };
 
 			// Allows assigning the full register directly
@@ -254,7 +254,7 @@ namespace NesEm
 			};
 			static_assert(sizeof(PPU_STATUS) == 1, "PPU_STATUS must be exactly 1 byte!");
 
-			PPU_STATUS bits{ };
+			PPU_STATUS bits;
 			uint8_t raw{ };
 
 			// Allows assigning the full register directly
